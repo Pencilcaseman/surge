@@ -45,6 +45,7 @@ namespace raylib {
 
 		LIBRAPID_NODISCARD librapid::Vec2i getSize() const;
 		LIBRAPID_NODISCARD librapid::Vec2i getPosition() const;
+		LIBRAPID_NODISCARD librapid::Vec2i getMousePosition() const;
 		LIBRAPID_NODISCARD int64_t getWidth() const;
 		LIBRAPID_NODISCARD int64_t getHeight() const;
 		LIBRAPID_NODISCARD int64_t getRenderWidth() const;

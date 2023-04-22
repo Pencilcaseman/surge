@@ -115,6 +115,11 @@ namespace raylib {
 		return {ret.x, ret.y};
 	}
 
+	librapid::Vec2i Window::getMousePosition() const {
+		Vector2 ret = ::GetMousePosition();
+		return {ret.x, ret.y};
+	}
+
 	int64_t Window::getWidth() const { return ::GetScreenWidth(); }
 
 	int64_t Window::getHeight() const { return ::GetScreenHeight(); }
