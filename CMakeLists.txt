@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
-project(raylib-cpp)
+project(surge)
 
 file(GLOB_RECURSE RAYLIB_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
         )
 
-set(module_name "raylib-cpp")
+set(module_name "surge")
 add_library(${module_name} STATIC ${RAYLIB_SOURCES})
 
 set(LIBRAPID_NO_WINDOWS_H ON) # RayLib defines some of the same macros as Windows.h, so we need to disable it

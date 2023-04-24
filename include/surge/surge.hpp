@@ -1,7 +1,6 @@
 #pragma once
 
 #include <librapid/librapid.hpp>
-
 #include <raylib.h>
 
 #if !defined(RAYLIB_VERSION_MAJOR) || !defined(RAYLIB_VERSION_MINOR) ||                            \
@@ -9,5 +8,4 @@
 #	error "raylib-cpp requires at least raylib 4.5.0"
 #endif
 
-#include "exception.hpp"
 #include "window.hpp"

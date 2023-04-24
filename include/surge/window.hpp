@@ -1,6 +1,6 @@
 #pragma once
 
-namespace raylib {
+namespace surge {
 	class Window {
 	public:
 		Window() = default;

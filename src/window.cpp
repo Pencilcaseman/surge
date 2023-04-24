@@ -1,6 +1,6 @@
-#include <raylib/raylib-cpp.hpp>
+#include <surge/surge.hpp>
 
-namespace raylib {
+namespace surge {
 	Window::Window(const librapid::Vec2i &size, const std::string &title) {
 		::InitWindow(size.x(), size.y(), title.c_str());
 	}
@@ -181,4 +181,4 @@ namespace raylib {
 		::DisableCursor();
 		return *this;
 	}
-} // namespace raylib
+} // namespace surge
