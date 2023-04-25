@@ -159,9 +159,13 @@ namespace surge {
 		/// \return The position of the window (librapid::Vec2i)
 		LIBRAPID_NODISCARD librapid::Vec2i getPosition() const;
 
-		/// \brief Get the current position of the mouse on the screen in pixels
+		/// \brief Get the current position of the mouse relative to the window in pixels
 		/// \return The position of the mouse (librapid::Vec2i)
 		LIBRAPID_NODISCARD librapid::Vec2i getMousePosition() const;
+
+		/// \brief Get the current position of the mouse relative to the screen in pixels
+		/// \return The position of the mouse (librapid::Vec2i)
+		LIBRAPID_NODISCARD librapid::Vec2i getMouseScreenPosition() const;
 
 		/// \brief Get the scale DPI of the window
 		/// \return The scale DPI of the window (librapid::Vec2i)
@@ -213,10 +217,12 @@ namespace surge {
 
 		/// \breif Draw the current FPS to the window at the given position
 		/// The text is drawn using the default font and automatically changes colour based on the
-		/// background, so it should be fairly visible.
+		/// FPS (green for 30+, yellow for 20+, red for 10+).
 		/// \param pos The position to draw the FPS at (librapid::Vec2i)
 		/// \return A reference to the window
 		Window &drawFPS(const librapid::Vec2i &pos);
+
+		Window &drawFrameTime(const librapid::Vec2i &pos);
 
 		/// \brief Show the cursor on the window
 		/// \return A reference to the window
@@ -234,6 +240,6 @@ namespace surge {
 		/// \return A reference to the window
 		Window &disableCursor();
 	private:
-		int64_t m_frameCount;
+		int64_t m_frameCount = 0;
 	};
 } // namespace surge

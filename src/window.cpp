@@ -20,7 +20,7 @@ namespace surge {
 		return ::IsWindowState(static_cast<unsigned int>(flag));
 	}
 
-	Window &Window::setFlag(uint64_t flag, bool state) {
+	Window &Window::setFlag(uint64_t flag, bool state = true) {
 		if (state)
 			::SetWindowState(static_cast<unsigned int>(flag));
 		else
@@ -30,7 +30,7 @@ namespace surge {
 
 	Window &Window::clear(const Color &color) {
 		auto [r, g, b, a] = color.rgba();
-		::ClearBackground({r, g, b, a});
+		::ClearBackground({r, g, b, static_cast<uint8_t>(a * 255)});
 		return *this;
 	}
 
@@ -122,6 +122,11 @@ namespace surge {
 		return {ret.x, ret.y};
 	}
 
+	librapid::Vec2i Window::getMouseScreenPosition() const {
+		Vector2 ret = ::GetMousePosition();
+		return librapid::Vec2i {ret.x, ret.y} + getPosition();
+	}
+
 	librapid::Vec2i Window::getScaleDPI() const {
 		Vector2 ret = GetWindowScaleDPI();
 		return {ret.x, ret.y};
@@ -156,6 +161,29 @@ namespace surge {
 
 	Window &Window::drawFPS(const librapid::Vec2i &pos) {
 		::DrawFPS(pos.x(), pos.y());
+		return *this;
+	}
+
+	Window &Window::drawFrameTime(const librapid::Vec2i &pos) {
+		static int64_t prevFrame = 0;
+		static float frameTime	 = 0.0f;
+		float newFrameTime		 = GetFrameTime();
+
+		if (getFrameCount() - prevFrame > 30 || newFrameTime > 0.05) {
+			prevFrame = getFrameCount();
+			frameTime = newFrameTime;
+		}
+
+		Color color = colors::lime;						  // Good FPS
+		if (frameTime >= 16.666f) color = colors::yellow; // Average FPS
+		if (frameTime >= 33.333f) color = colors::orange; // Bad FPS
+		::DrawText(
+		  librapid::formatTime<librapid::time::second>(frameTime).c_str(),
+		  pos.x(),
+		  pos.y(),
+		  20,
+		  {color.red(), color.green(), color.blue(), static_cast<uint8_t>(color.alpha() * 255)});
+
 		return *this;
 	}
 
