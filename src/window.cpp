@@ -16,23 +16,21 @@ namespace surge {
 	bool Window::isMaximized() const { return ::IsWindowMaximized(); }
 	bool Window::isFocused() const { return ::IsWindowFocused(); }
 	bool Window::isResized() const { return ::IsWindowResized(); }
-	bool Window::isState(unsigned int flag) const { return ::IsWindowState(flag); }
+	bool Window::isState(uint64_t flag) const {
+		return ::IsWindowState(static_cast<unsigned int>(flag));
+	}
 
-	Window &Window::setState(unsigned int flag) {
-		::SetWindowState(flag);
+	Window &Window::setFlag(uint64_t flag, bool state) {
+		if (state)
+			::SetWindowState(static_cast<unsigned int>(flag));
+		else
+			::ClearWindowState(static_cast<unsigned int>(flag));
 		return *this;
 	}
 
-	Window &Window::clearState(unsigned int flag) {
-		::ClearWindowState(flag);
-		return *this;
-	}
-
-	Window &Window::clearBackground(const librapid::Vec4i &color) {
-		::ClearBackground({static_cast<unsigned char>(color.x()),
-						   static_cast<unsigned char>(color.y()),
-						   static_cast<unsigned char>(color.z()),
-						   static_cast<unsigned char>(color.w())});
+	Window &Window::clear(const Color &color) {
+		auto [r, g, b, a] = color.rgba();
+		::ClearBackground({r, g, b, a});
 		return *this;
 	}
 
@@ -109,6 +107,10 @@ namespace surge {
 	}
 
 	librapid::Vec2i Window::getSize() const { return {getWidth(), getHeight()}; }
+	int64_t Window::getWidth() const { return ::GetScreenWidth(); }
+	int64_t Window::getHeight() const { return ::GetScreenHeight(); }
+	int64_t Window::getRenderWidth() const { return ::GetRenderWidth(); }
+	int64_t Window::getRenderHeight() const { return ::GetRenderHeight(); }
 
 	librapid::Vec2i Window::getPosition() const {
 		Vector2 ret = ::GetWindowPosition();
@@ -120,14 +122,6 @@ namespace surge {
 		return {ret.x, ret.y};
 	}
 
-	int64_t Window::getWidth() const { return ::GetScreenWidth(); }
-
-	int64_t Window::getHeight() const { return ::GetScreenHeight(); }
-
-	int64_t Window::getRenderWidth() const { return ::GetRenderWidth(); }
-
-	int64_t Window::getRenderHeight() const { return ::GetRenderHeight(); }
-
 	librapid::Vec2i Window::getScaleDPI() const {
 		Vector2 ret = GetWindowScaleDPI();
 		return {ret.x, ret.y};
@@ -137,9 +131,11 @@ namespace surge {
 
 	int64_t Window::getFPS() const { return ::GetFPS(); }
 
-	int64_t Window::getFrameTime() const { return ::GetFrameTime(); }
+	float Window::getFrameTime() const { return ::GetFrameTime(); }
 
 	double Window::getTime() const { return ::GetTime(); }
+
+	int64_t Window::getFrameCount() const { return m_frameCount; }
 
 	bool Window::isReady() const { return ::IsWindowReady(); }
 
@@ -154,6 +150,7 @@ namespace surge {
 
 	Window &Window::endDrawing() {
 		::EndDrawing();
+		++m_frameCount;
 		return *this;
 	}
 
