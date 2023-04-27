@@ -101,45 +101,37 @@ namespace surge {
 				m_color.w()};
 	}
 
-	uint8_t Color::red() const { return static_cast<uint8_t>(m_color.x() * 255); }
-	uint8_t Color::green() const { return static_cast<uint8_t>(m_color.y() * 255); }
-	uint8_t Color::blue() const { return static_cast<uint8_t>(m_color.z() * 255); }
 	HSV Color::hsv() const { LIBRAPID_NOT_IMPLEMENTED; }
 	HSVA Color::hsva() const { LIBRAPID_NOT_IMPLEMENTED; }
-	float Color::hue() const { LIBRAPID_NOT_IMPLEMENTED; }
-	float Color::saturation() const { LIBRAPID_NOT_IMPLEMENTED; }
-	float Color::value() const { LIBRAPID_NOT_IMPLEMENTED; }
 	HSL Color::hsl() const { LIBRAPID_NOT_IMPLEMENTED; }
 	HSLA Color::hsla() const { LIBRAPID_NOT_IMPLEMENTED; }
-	float Color::lightness() const { LIBRAPID_NOT_IMPLEMENTED; }
-	float Color::alpha() const { return static_cast<uint8_t>(m_color.w() * 255); }
 
-	const Color colors::veryDarkGray  = Color::fromRGBA({15, 15, 15, 1});
-	const Color colors::veryLightGray = Color::fromRGBA({240, 240, 240, 1});
-	const Color colors::lightGray	  = Color::fromRGBA({200, 200, 200, 1});
-	const Color colors::gray		  = Color::fromRGBA({130, 130, 130, 1});
-	const Color colors::darkGray	  = Color::fromRGBA({80, 80, 80, 1});
-	const Color colors::yellow		  = Color::fromRGBA({253, 249, 0, 1});
-	const Color colors::gold		  = Color::fromRGBA({255, 203, 0, 1});
-	const Color colors::orange		  = Color::fromRGBA({255, 161, 0, 1});
-	const Color colors::pink		  = Color::fromRGBA({255, 109, 194, 1});
-	const Color colors::red			  = Color::fromRGBA({230, 41, 55, 1});
-	const Color colors::maroon		  = Color::fromRGBA({190, 33, 55, 1});
-	const Color colors::green		  = Color::fromRGBA({0, 228, 48, 1});
-	const Color colors::lime		  = Color::fromRGBA({0, 158, 47, 1});
-	const Color colors::darkGreen	  = Color::fromRGBA({0, 117, 44, 1});
-	const Color colors::skyBlue		  = Color::fromRGBA({102, 191, 255, 1});
-	const Color colors::blue		  = Color::fromRGBA({0, 121, 241, 1});
-	const Color colors::darkBlue	  = Color::fromRGBA({0, 82, 172, 1});
-	const Color colors::purple		  = Color::fromRGBA({200, 122, 255, 1});
-	const Color colors::violet		  = Color::fromRGBA({135, 60, 190, 1});
-	const Color colors::darkPurple	  = Color::fromRGBA({112, 31, 126, 1});
-	const Color colors::beige		  = Color::fromRGBA({211, 176, 131, 1});
-	const Color colors::brown		  = Color::fromRGBA({127, 106, 79, 1});
-	const Color colors::darkBrown	  = Color::fromRGBA({76, 63, 47, 1});
-	const Color colors::white		  = Color::fromRGBA({255, 255, 255, 1});
-	const Color colors::black		  = Color::fromRGBA({0, 0, 0, 1});
-	const Color colors::blank		  = Color::fromRGBA({0, 0, 0, 0});
-	const Color colors::magenta		  = Color::fromRGBA({255, 0, 255, 1});
-	const Color colors::cyan		  = Color::fromRGBA({0, 255, 255, 1});
+	const Color Color::veryDarkGray	 = Color::fromRGBA({15, 15, 15, 1});
+	const Color Color::veryLightGray = Color::fromRGBA({240, 240, 240, 1});
+	const Color Color::lightGray	 = Color::fromRGBA({200, 200, 200, 1});
+	const Color Color::gray			 = Color::fromRGBA({130, 130, 130, 1});
+	const Color Color::darkGray		 = Color::fromRGBA({80, 80, 80, 1});
+	const Color Color::yellow		 = Color::fromRGBA({253, 249, 0, 1});
+	const Color Color::gold			 = Color::fromRGBA({255, 203, 0, 1});
+	const Color Color::orange		 = Color::fromRGBA({255, 161, 0, 1});
+	const Color Color::pink			 = Color::fromRGBA({255, 109, 194, 1});
+	const Color Color::red			 = Color::fromRGBA({230, 41, 55, 1});
+	const Color Color::maroon		 = Color::fromRGBA({190, 33, 55, 1});
+	const Color Color::green		 = Color::fromRGBA({0, 228, 48, 1});
+	const Color Color::lime			 = Color::fromRGBA({0, 158, 47, 1});
+	const Color Color::darkGreen	 = Color::fromRGBA({0, 117, 44, 1});
+	const Color Color::skyBlue		 = Color::fromRGBA({102, 191, 255, 1});
+	const Color Color::blue			 = Color::fromRGBA({0, 121, 241, 1});
+	const Color Color::darkBlue		 = Color::fromRGBA({0, 82, 172, 1});
+	const Color Color::purple		 = Color::fromRGBA({200, 122, 255, 1});
+	const Color Color::violet		 = Color::fromRGBA({135, 60, 190, 1});
+	const Color Color::darkPurple	 = Color::fromRGBA({112, 31, 126, 1});
+	const Color Color::beige		 = Color::fromRGBA({211, 176, 131, 1});
+	const Color Color::brown		 = Color::fromRGBA({127, 106, 79, 1});
+	const Color Color::darkBrown	 = Color::fromRGBA({76, 63, 47, 1});
+	const Color Color::white		 = Color::fromRGBA({255, 255, 255, 1});
+	const Color Color::black		 = Color::fromRGBA({0, 0, 0, 1});
+	const Color Color::blank		 = Color::fromRGBA({0, 0, 0, 0});
+	const Color Color::magenta		 = Color::fromRGBA({255, 0, 255, 1});
+	const Color Color::cyan			 = Color::fromRGBA({0, 255, 255, 1});
 } // namespace surge

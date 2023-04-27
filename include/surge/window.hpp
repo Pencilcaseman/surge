@@ -13,6 +13,8 @@ namespace surge {
 		/// \param title The title of the window (std::string)
 		explicit Window(const librapid::Vec2i &size, const std::string &title = "RayLib");
 
+		Window &init();
+
 		~Window();
 
 		/// \brief Close the window
@@ -55,12 +57,12 @@ namespace surge {
 		/// Set a flag for the window
 		/// \param flag The flag to set (uint64_t)
 		/// \return A reference to the window
-		Window &setFlag(uint64_t flag, bool state);
+		Window &setFlag(WindowFlag flag, bool state = true);
 
 		/// \brief Clear the window with a specified color
 		/// \param color The color to clear the window with (surge::Color)
 		/// \return A reference to the window
-		Window &clear(const Color &color);
+		Window &clear(const Color &color = Color::black);
 
 		/// \brief Toggle fullscreen
 		/// \return A reference to the window
@@ -159,13 +161,13 @@ namespace surge {
 		/// \return The position of the window (librapid::Vec2i)
 		LIBRAPID_NODISCARD librapid::Vec2i getPosition() const;
 
-		/// \brief Get the current position of the mouse relative to the window in pixels
-		/// \return The position of the mouse (librapid::Vec2i)
-		LIBRAPID_NODISCARD librapid::Vec2i getMousePosition() const;
-
-		/// \brief Get the current position of the mouse relative to the screen in pixels
-		/// \return The position of the mouse (librapid::Vec2i)
-		LIBRAPID_NODISCARD librapid::Vec2i getMouseScreenPosition() const;
+		//		/// \brief Get the current position of the mouse relative to the window in pixels
+		//		/// \return The position of the mouse (librapid::Vec2i)
+		//		LIBRAPID_NODISCARD librapid::Vec2i getMousePosition() const;
+		//
+		//		/// \brief Get the current position of the mouse relative to the screen in pixels
+		//		/// \return The position of the mouse (librapid::Vec2i)
+		//		LIBRAPID_NODISCARD librapid::Vec2i getMouseScreenPosition() const;
 
 		/// \brief Get the scale DPI of the window
 		/// \return The scale DPI of the window (librapid::Vec2i)
@@ -224,22 +226,17 @@ namespace surge {
 
 		Window &drawFrameTime(const librapid::Vec2i &pos);
 
-		/// \brief Show the cursor on the window
-		/// \return A reference to the window
-		Window &showCursor();
+		Window &drawTime(const librapid::Vec2i &pos);
 
-		/// \brief Hide the cursor on the window
-		/// \return A reference to the window
-		Window &hideCursor();
+		LIBRAPID_NODISCARD Mouse &mouse();
+		LIBRAPID_NODISCARD const Mouse &mouse() const;
 
-		/// \brief Enable the cursor on the window
-		/// \return A reference to the window
-		Window &enableCursor();
-
-		/// \brief Disable the cursor on the window
-		/// \return A reference to the window
-		Window &disableCursor();
+		// LIBRAPID_NODISCARD Keyboard &keyboard();
+		// LIBRAPID_NODISCARD const Keyboard &keyboard() const;
 	private:
 		int64_t m_frameCount = 0;
+		librapid::Vec2i m_initialSize;
+		std::string m_initialTitle;
+		Mouse m_mouse;
 	};
 } // namespace surge

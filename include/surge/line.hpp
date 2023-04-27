@@ -21,7 +21,7 @@ namespace surge {
 		Line &set(const librapid::Vec2d &start, const librapid::Vec2d &end);
 		Line &setControl(const librapid::Vec2d &control, int index = 0);
 
-		void draw(const Color &color = colors::white) const;
+		void draw(const Color &color = Color::white) const;
 
 	private:
 		librapid::Vec2d m_start;

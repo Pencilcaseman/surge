@@ -64,26 +64,11 @@ namespace surge {
 
 		LIBRAPID_NODISCARD RGB rgb() const;
 		LIBRAPID_NODISCARD RGBA rgba() const;
-		LIBRAPID_NODISCARD uint8_t red() const;
-		LIBRAPID_NODISCARD uint8_t green() const;
-		LIBRAPID_NODISCARD uint8_t blue() const;
-
 		LIBRAPID_NODISCARD HSV hsv() const;
 		LIBRAPID_NODISCARD HSVA hsva() const;
-		LIBRAPID_NODISCARD float hue() const;
-		LIBRAPID_NODISCARD float saturation() const;
-		LIBRAPID_NODISCARD float value() const;
-
 		LIBRAPID_NODISCARD HSL hsl() const;
 		LIBRAPID_NODISCARD HSLA hsla() const;
-		LIBRAPID_NODISCARD float lightness() const;
 
-		LIBRAPID_NODISCARD float alpha() const;
-	private:
-		librapid::Vec4f m_color; // Stores the value as RGBA (0.0f - 1.0f)
-	};
-
-	struct colors {
 		const static Color gray;
 		const static Color darkGray;
 		const static Color veryDarkGray;
@@ -112,5 +97,7 @@ namespace surge {
 		const static Color blank;
 		const static Color magenta;
 		const static Color cyan;
+	private:
+		librapid::Vec4f m_color; // Stores the value as RGBA (0.0f - 1.0f)
 	};
 } // namespace surge
