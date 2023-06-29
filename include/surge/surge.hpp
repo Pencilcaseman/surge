@@ -8,7 +8,20 @@
 #	error "raylib-cpp requires at least raylib 4.5.0"
 #endif
 
+#define SURGE_WARN_ONCE(condition, message)                                                        \
+	{                                                                                              \
+		static bool warned = false;                                                                \
+		if (!(condition) && !warned) {                                                             \
+			LIBRAPID_WARN(message);                                                                \
+			warned = true;                                                                         \
+		}                                                                                          \
+	}
+
 namespace surge {
+	namespace global {
+		inline static int roundedRectSegments = 0;
+	}
+
 	enum class WindowFlag {
 		vsync		= FLAG_VSYNC_HINT,		   /// Enable V-Sync on GPU
 		fullscreen	= FLAG_FULLSCREEN_MODE,	   /// Run program in fullscreen
@@ -208,3 +221,4 @@ namespace surge {
 #include "mouse.hpp"
 #include "window.hpp"
 #include "line.hpp"
+#include "rectangle.hpp"

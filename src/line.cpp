@@ -1,6 +1,9 @@
 #include <surge/surge.hpp>
 
 namespace surge {
+	Line::Line(double x1, double y1, double x2, double y2, float thickness) :
+			m_start(x1, y1), m_end(x2, y2), m_thickness(thickness) {}
+
 	Line::Line(const librapid::Vec2d &start, const librapid::Vec2d &end, float thickness) :
 			m_start(start), m_end(end), m_thickness(thickness) {}
 

@@ -110,13 +110,13 @@ namespace surge {
 		return *this;
 	}
 
-	librapid::Vec2i Window::getSize() const { return {getWidth(), getHeight()}; }
-	int64_t Window::getWidth() const { return ::GetScreenWidth(); }
-	int64_t Window::getHeight() const { return ::GetScreenHeight(); }
-	int64_t Window::getRenderWidth() const { return ::GetRenderWidth(); }
-	int64_t Window::getRenderHeight() const { return ::GetRenderHeight(); }
+	librapid::Vec2i Window::size() const { return {width(), height()}; }
+	int64_t Window::width() const { return ::GetScreenWidth(); }
+	int64_t Window::height() const { return ::GetScreenHeight(); }
+	int64_t Window::renderWidth() const { return ::GetRenderWidth(); }
+	int64_t Window::renderHeight() const { return ::GetRenderHeight(); }
 
-	librapid::Vec2i Window::getPosition() const {
+	librapid::Vec2i Window::position() const {
 		Vector2 ret = ::GetWindowPosition();
 		return {ret.x, ret.y};
 	}
@@ -131,20 +131,20 @@ namespace surge {
 	//		return librapid::Vec2i {ret.x, ret.y} + getPosition();
 	//	}
 
-	librapid::Vec2i Window::getScaleDPI() const {
+	librapid::Vec2i Window::scaleDPI() const {
 		Vector2 ret = GetWindowScaleDPI();
 		return {ret.x, ret.y};
 	}
 
-	int64_t Window::getMonitorCount() const { return ::GetMonitorCount(); }
+	int64_t Window::monitorCount() const { return ::GetMonitorCount(); }
 
-	int64_t Window::getFPS() const { return ::GetFPS(); }
+	int64_t Window::fps() const { return ::GetFPS(); }
 
-	float Window::getFrameTime() const { return ::GetFrameTime(); }
+	float Window::frameTime() const { return ::GetFrameTime(); }
 
-	double Window::getTime() const { return ::GetTime(); }
+	double Window::time() const { return ::GetTime(); }
 
-	int64_t Window::getFrameCount() const { return m_frameCount; }
+	int64_t Window::frameCount() const { return m_frameCount; }
 
 	bool Window::isReady() const { return ::IsWindowReady(); }
 
@@ -176,8 +176,8 @@ namespace surge {
 		static float frameTime	 = 0.0f;
 		float newFrameTime		 = GetFrameTime();
 
-		if (getFrameCount() - prevFrame > 30 || newFrameTime > 0.05) {
-			prevFrame = getFrameCount();
+		if (this->frameCount() - prevFrame > 30 || newFrameTime > 0.05) {
+			prevFrame = this->frameCount();
 			frameTime = newFrameTime;
 		}
 
@@ -196,7 +196,7 @@ namespace surge {
 
 	Window &Window::drawTime(const librapid::Vec2i &pos) {
 		auto [r, g, b, a] = Color::magenta.rgba();
-		::DrawText(librapid::formatTime<librapid::time::second>(getTime()).c_str(),
+		::DrawText(librapid::formatTime<librapid::time::second>(time()).c_str(),
 				   pos.x(),
 				   pos.y(),
 				   20,

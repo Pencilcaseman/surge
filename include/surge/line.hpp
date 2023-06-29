@@ -4,6 +4,7 @@ namespace surge {
 	class Line {
 	public:
 		Line() = default;
+		Line(double x1, double y1, double x2, double y2, float thickness = 1.0f);
 		Line(const librapid::Vec2d &start, const librapid::Vec2d &end, float thickness = 1.0f);
 		Line(const Line &other)		= default;
 		Line(Line &&other) noexcept = default;

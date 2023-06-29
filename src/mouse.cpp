@@ -55,14 +55,14 @@ namespace surge {
 
 	bool Mouse::isButtonUp(MouseButton button) const { return IsMouseButtonUp((int)button); }
 
-	librapid::Vec2f Mouse::position() const {
+	librapid::Vec2f Mouse::pos() const {
 		auto [x, y] = GetMousePosition();
 		return {x, y};
 	}
 
-	librapid::Vec2f Mouse::screenSpacePosition() const {
+	librapid::Vec2f Mouse::screenSpacePos() const {
 		auto [x, y] = GetWindowPosition();
-		return librapid::Vec2f(x, y) + position();
+		return librapid::Vec2f(x, y) + pos();
 	}
 
 	librapid::Vec2f Mouse::delta() const {

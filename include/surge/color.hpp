@@ -59,8 +59,13 @@ namespace surge {
 		static Color fromHSVA(const HSVA &hsva);
 		static Color fromHSLA(const HSLA &hsla);
 
+		static Color random();
+
 		Color &operator=(const Color &other)	 = default;
 		Color &operator=(Color &&other) noexcept = default;
+
+		bool operator==(const Color &other) const;
+		bool operator!=(const Color &other) const;
 
 		LIBRAPID_NODISCARD RGB rgb() const;
 		LIBRAPID_NODISCARD RGBA rgba() const;
@@ -69,6 +74,7 @@ namespace surge {
 		LIBRAPID_NODISCARD HSL hsl() const;
 		LIBRAPID_NODISCARD HSLA hsla() const;
 
+		const static Color empty;
 		const static Color gray;
 		const static Color darkGray;
 		const static Color veryDarkGray;

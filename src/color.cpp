@@ -59,6 +59,13 @@ namespace surge {
 		}
 	} // namespace detail
 
+	bool Color::operator==(const Color &other) const {
+		return m_color.x() == other.m_color.x() && m_color.y() == other.m_color.y() &&
+			   m_color.z() == other.m_color.z() && m_color.w() == other.m_color.w();
+	}
+
+	bool Color::operator!=(const Color &other) const { return !(*this == other); }
+
 	Color::Color(uint8_t g) : m_color(g, g, g, 255) {}
 	Color::Color(uint8_t r, uint8_t g, uint8_t b, float a) :
 			m_color(librapid::Vec4d(r, g, b, a) / 255.0f) {}
@@ -101,11 +108,19 @@ namespace surge {
 				m_color.w()};
 	}
 
+	Color Color::random() {
+		return Color::fromRGBA({static_cast<uint8_t>(librapid::randint(0, 255)),
+								static_cast<uint8_t>(librapid::randint(0, 255)),
+								static_cast<uint8_t>(librapid::randint(0, 255)),
+								1.0f});
+	}
+
 	HSV Color::hsv() const { LIBRAPID_NOT_IMPLEMENTED; }
 	HSVA Color::hsva() const { LIBRAPID_NOT_IMPLEMENTED; }
 	HSL Color::hsl() const { LIBRAPID_NOT_IMPLEMENTED; }
 	HSLA Color::hsla() const { LIBRAPID_NOT_IMPLEMENTED; }
 
+	const Color Color::empty		 = Color::fromRGBA({0, 0, 0, 0});
 	const Color Color::veryDarkGray	 = Color::fromRGBA({15, 15, 15, 1});
 	const Color Color::veryLightGray = Color::fromRGBA({240, 240, 240, 1});
 	const Color Color::lightGray	 = Color::fromRGBA({200, 200, 200, 1});
