@@ -9,13 +9,13 @@
 #endif
 
 #define SURGE_WARN_ONCE(condition, message)                                                        \
-	{                                                                                              \
+	do {                                                                                              \
 		static bool warned = false;                                                                \
 		if (!(condition) && !warned) {                                                             \
 			LIBRAPID_WARN(message);                                                                \
 			warned = true;                                                                         \
 		}                                                                                          \
-	}
+	} while (0)
 
 namespace surge {
 	namespace global {
