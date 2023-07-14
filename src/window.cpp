@@ -1,8 +1,12 @@
 #include <surge/surge.hpp>
 
 namespace surge {
-	Window::Window(const librapid::Vec2i &size, const std::string &title) {
-		::InitWindow(size.x(), size.y(), title.c_str());
+	Window::Window(const librapid::Vec2i &size, const std::string &title) :
+			m_initialSize(size), m_initialTitle(title) {}
+
+	Window &Window::init() {
+		::InitWindow(m_initialSize.x(), m_initialSize.y(), m_initialTitle.c_str());
+		return *this;
 	}
 
 	Window::~Window() { close(); }
@@ -20,7 +24,7 @@ namespace surge {
 		return ::IsWindowState(static_cast<unsigned int>(flag));
 	}
 
-	Window &Window::setFlag(uint64_t flag, bool state) {
+	Window &Window::setFlag(WindowFlag flag, bool state) {
 		if (state)
 			::SetWindowState(static_cast<unsigned int>(flag));
 		else
@@ -30,7 +34,7 @@ namespace surge {
 
 	Window &Window::clear(const Color &color) {
 		auto [r, g, b, a] = color.rgba();
-		::ClearBackground({r, g, b, a});
+		::ClearBackground({r, g, b, static_cast<uint8_t>(a * 255)});
 		return *this;
 	}
 
@@ -106,36 +110,41 @@ namespace surge {
 		return *this;
 	}
 
-	librapid::Vec2i Window::getSize() const { return {getWidth(), getHeight()}; }
-	int64_t Window::getWidth() const { return ::GetScreenWidth(); }
-	int64_t Window::getHeight() const { return ::GetScreenHeight(); }
-	int64_t Window::getRenderWidth() const { return ::GetRenderWidth(); }
-	int64_t Window::getRenderHeight() const { return ::GetRenderHeight(); }
+	librapid::Vec2i Window::size() const { return {width(), height()}; }
+	int64_t Window::width() const { return ::GetScreenWidth(); }
+	int64_t Window::height() const { return ::GetScreenHeight(); }
+	int64_t Window::renderWidth() const { return ::GetRenderWidth(); }
+	int64_t Window::renderHeight() const { return ::GetRenderHeight(); }
 
-	librapid::Vec2i Window::getPosition() const {
+	librapid::Vec2i Window::position() const {
 		Vector2 ret = ::GetWindowPosition();
 		return {ret.x, ret.y};
 	}
 
-	librapid::Vec2i Window::getMousePosition() const {
-		Vector2 ret = ::GetMousePosition();
-		return {ret.x, ret.y};
-	}
+	//	librapid::Vec2i Window::getMousePosition() const {
+	//		Vector2 ret = ::GetMousePosition();
+	//		return {ret.x, ret.y};
+	//	}
+	//
+	//	librapid::Vec2i Window::getMouseScreenPosition() const {
+	//		Vector2 ret = ::GetMousePosition();
+	//		return librapid::Vec2i {ret.x, ret.y} + getPosition();
+	//	}
 
-	librapid::Vec2i Window::getScaleDPI() const {
+	librapid::Vec2i Window::scaleDPI() const {
 		Vector2 ret = GetWindowScaleDPI();
 		return {ret.x, ret.y};
 	}
 
-	int64_t Window::getMonitorCount() const { return ::GetMonitorCount(); }
+	int64_t Window::monitorCount() const { return ::GetMonitorCount(); }
 
-	int64_t Window::getFPS() const { return ::GetFPS(); }
+	int64_t Window::fps() const { return ::GetFPS(); }
 
-	float Window::getFrameTime() const { return ::GetFrameTime(); }
+	float Window::frameTime() const { return ::GetFrameTime(); }
 
-	double Window::getTime() const { return ::GetTime(); }
+	double Window::time() const { return ::GetTime(); }
 
-	int64_t Window::getFrameCount() const { return m_frameCount; }
+	int64_t Window::frameCount() const { return m_frameCount; }
 
 	bool Window::isReady() const { return ::IsWindowReady(); }
 
@@ -144,6 +153,9 @@ namespace surge {
 	void *Window::getHandle() const { return ::GetWindowHandle(); }
 
 	Window &Window::beginDrawing() {
+		LIBRAPID_ASSERT(
+		  isReady(),
+		  "Window is not ready to be drawn on. Make sure you have called Window::init()");
 		::BeginDrawing();
 		return *this;
 	}
@@ -159,23 +171,42 @@ namespace surge {
 		return *this;
 	}
 
-	Window &Window::showCursor() {
-		::ShowCursor();
+	Window &Window::drawFrameTime(const librapid::Vec2i &pos) {
+		static int64_t prevFrame = 0;
+		static float frameTime	 = 0.0f;
+		float newFrameTime		 = GetFrameTime();
+
+		if (this->frameCount() - prevFrame > 30 || newFrameTime > 0.05) {
+			prevFrame = this->frameCount();
+			frameTime = newFrameTime;
+		}
+
+		Color color = Color::lime;						 // Good FPS
+		if (frameTime >= 16.666f) color = Color::yellow; // Average FPS
+		if (frameTime >= 33.333f) color = Color::orange; // Bad FPS
+		auto [r, g, b, a] = color.rgba();
+		::DrawText(librapid::formatTime<librapid::time::second>(frameTime).c_str(),
+				   pos.x(),
+				   pos.y(),
+				   20,
+				   {r, g, b, static_cast<uint8_t>(a * 255)});
+
 		return *this;
 	}
 
-	Window &Window::hideCursor() {
-		::HideCursor();
+	Window &Window::drawTime(const librapid::Vec2i &pos) {
+		auto [r, g, b, a] = Color::magenta.rgba();
+		::DrawText(librapid::formatTime<librapid::time::second>(time()).c_str(),
+				   pos.x(),
+				   pos.y(),
+				   20,
+				   {r, g, b, static_cast<uint8_t>(a * 255)});
 		return *this;
 	}
 
-	Window &Window::enableCursor() {
-		::EnableCursor();
-		return *this;
-	}
+	Mouse &Window::mouse() { return m_mouse; }
+	const Mouse &Window::mouse() const { return m_mouse; }
 
-	Window &Window::disableCursor() {
-		::DisableCursor();
-		return *this;
-	}
+	// Keyboard &Window::keyboard() { return m_keyboard; }
+	// const Keyboard &Window::keyboard() const { return m_keyboard; }
 } // namespace surge

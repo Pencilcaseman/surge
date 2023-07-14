@@ -13,6 +13,8 @@ namespace surge {
 		/// \param title The title of the window (std::string)
 		explicit Window(const librapid::Vec2i &size, const std::string &title = "RayLib");
 
+		Window &init();
+
 		~Window();
 
 		/// \brief Close the window
@@ -55,12 +57,12 @@ namespace surge {
 		/// Set a flag for the window
 		/// \param flag The flag to set (uint64_t)
 		/// \return A reference to the window
-		Window &setFlag(uint64_t flag, bool state);
+		Window &setFlag(WindowFlag flag, bool state = true);
 
 		/// \brief Clear the window with a specified color
 		/// \param color The color to clear the window with (surge::Color)
 		/// \return A reference to the window
-		Window &clear(const Color &color);
+		Window &clear(const Color &color = Color::black);
 
 		/// \brief Toggle fullscreen
 		/// \return A reference to the window
@@ -135,57 +137,61 @@ namespace surge {
 
 		/// \brief Get the size of the window in pixels
 		/// \return The size of the window (librapid::Vec2i)
-		LIBRAPID_NODISCARD librapid::Vec2i getSize() const;
+		LIBRAPID_NODISCARD librapid::Vec2i size() const;
 
 		/// \brief Get the width of the window in pixels
 		/// \return The width of the window (int64_t)
-		LIBRAPID_NODISCARD int64_t getWidth() const;
+		LIBRAPID_NODISCARD int64_t width() const;
 
 		/// \brief Get the height of the window in pixels
 		/// \return The height of the window (int64_t)
-		LIBRAPID_NODISCARD int64_t getHeight() const;
+		LIBRAPID_NODISCARD int64_t height() const;
 
 		/// \brief Get the width of the window, taking into account the DPI scale
 		/// \return The width of the window (int64_t)
-		/// \see getScaleDPI()
-		LIBRAPID_NODISCARD int64_t getRenderWidth() const;
+		/// \see scaleDPI()
+		LIBRAPID_NODISCARD int64_t renderWidth() const;
 
 		/// \brief Get the height of the window, taking into account the DPI scale
 		/// \return The height of the window (int64_t)
-		/// \see getScaleDPI()
-		LIBRAPID_NODISCARD int64_t getRenderHeight() const;
+		/// \see scaleDPI()
+		LIBRAPID_NODISCARD int64_t renderHeight() const;
 
 		/// \brief Get the current position of the window on the screen in pixels
 		/// \return The position of the window (librapid::Vec2i)
-		LIBRAPID_NODISCARD librapid::Vec2i getPosition() const;
+		LIBRAPID_NODISCARD librapid::Vec2i position() const;
 
-		/// \brief Get the current position of the mouse on the screen in pixels
-		/// \return The position of the mouse (librapid::Vec2i)
-		LIBRAPID_NODISCARD librapid::Vec2i getMousePosition() const;
+		//		/// \brief Get the current position of the mouse relative to the window in pixels
+		//		/// \return The position of the mouse (librapid::Vec2i)
+		//		LIBRAPID_NODISCARD librapid::Vec2i getMousePosition() const;
+		//
+		//		/// \brief Get the current position of the mouse relative to the screen in pixels
+		//		/// \return The position of the mouse (librapid::Vec2i)
+		//		LIBRAPID_NODISCARD librapid::Vec2i getMouseScreenPosition() const;
 
 		/// \brief Get the scale DPI of the window
 		/// \return The scale DPI of the window (librapid::Vec2i)
-		LIBRAPID_NODISCARD librapid::Vec2i getScaleDPI() const;
+		LIBRAPID_NODISCARD librapid::Vec2i scaleDPI() const;
 
 		/// \brief Get the number of monitors attached to the system
 		/// \return The number of monitors (int64_t)
-		LIBRAPID_NODISCARD int64_t getMonitorCount() const;
+		LIBRAPID_NODISCARD int64_t monitorCount() const;
 
 		/// \brief Get the current frame rate
 		/// \return The current frame rate (int64_t)
-		LIBRAPID_NODISCARD int64_t getFPS() const;
+		LIBRAPID_NODISCARD int64_t fps() const;
 
 		/// \brief Get the current frame time
 		/// \return The current frame time (float)
-		LIBRAPID_NODISCARD float getFrameTime() const;
+		LIBRAPID_NODISCARD float frameTime() const;
 
 		/// \brief Get the time elapsed since the window was created
 		/// \return The time elapsed (double)
-		LIBRAPID_NODISCARD double getTime() const;
+		LIBRAPID_NODISCARD double time() const;
 
 		/// \brief Return the number of frames that have been drawn
 		/// \return The number of frames (int64_t)
-		LIBRAPID_NODISCARD int64_t getFrameCount() const;
+		LIBRAPID_NODISCARD int64_t frameCount() const;
 
 		/// \brief Check if the window is ready to be drawn to
 		/// \return True if the window is ready, false otherwise
@@ -213,27 +219,24 @@ namespace surge {
 
 		/// \breif Draw the current FPS to the window at the given position
 		/// The text is drawn using the default font and automatically changes colour based on the
-		/// background, so it should be fairly visible.
+		/// FPS (green for 30+, yellow for 20+, red for 10+).
 		/// \param pos The position to draw the FPS at (librapid::Vec2i)
 		/// \return A reference to the window
 		Window &drawFPS(const librapid::Vec2i &pos);
 
-		/// \brief Show the cursor on the window
-		/// \return A reference to the window
-		Window &showCursor();
+		Window &drawFrameTime(const librapid::Vec2i &pos);
 
-		/// \brief Hide the cursor on the window
-		/// \return A reference to the window
-		Window &hideCursor();
+		Window &drawTime(const librapid::Vec2i &pos);
 
-		/// \brief Enable the cursor on the window
-		/// \return A reference to the window
-		Window &enableCursor();
+		LIBRAPID_NODISCARD Mouse &mouse();
+		LIBRAPID_NODISCARD const Mouse &mouse() const;
 
-		/// \brief Disable the cursor on the window
-		/// \return A reference to the window
-		Window &disableCursor();
+		// LIBRAPID_NODISCARD Keyboard &keyboard();
+		// LIBRAPID_NODISCARD const Keyboard &keyboard() const;
 	private:
-		int64_t m_frameCount;
+		int64_t m_frameCount = 0;
+		librapid::Vec2i m_initialSize;
+		std::string m_initialTitle;
+		Mouse m_mouse;
 	};
 } // namespace surge

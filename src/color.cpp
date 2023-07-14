@@ -3,6 +3,9 @@
 namespace surge {
 	namespace detail {
 		static RGB hsvToRgb(float h, float s, float v) {
+			h = librapid::clamp(h, 0.0f, 1.0f);
+			s = librapid::clamp(s, 0.0f, 1.0f);
+			v = librapid::clamp(v, 0.0f, 1.0f);
 			float r, g, b;
 
 			int i	= static_cast<int>(h * 6.0f);
@@ -26,8 +29,7 @@ namespace surge {
 		}
 
 		float hueToRgb(float p, float q, float t) {
-			if (t < 0.0f) t += 1.0f;
-			if (t > 1.0f) t -= 1.0f;
+			t = librapid::clamp(t, 0.0f, 1.0f);
 			if (t < 1.0f / 6.0f) return p + (q - p) * 6.0f * t;
 			if (t < 1.0f / 2.0f) return q;
 			if (t < 2.0f / 3.0f) return p + (q - p) * (2.0f / 3.0f - t) * 6.0f;
@@ -35,6 +37,10 @@ namespace surge {
 		}
 
 		RGB hslToRgb(float h, float s, float l) {
+			h = librapid::clamp(h, 0.0f, 1.0f);
+			s = librapid::clamp(s, 0.0f, 1.0f);
+			l = librapid::clamp(l, 0.0f, 1.0f);
+
 			float r, g, b;
 
 			if (s == 0.0f) {
@@ -53,33 +59,40 @@ namespace surge {
 		}
 	} // namespace detail
 
+	bool Color::operator==(const Color &other) const {
+		return m_color.x() == other.m_color.x() && m_color.y() == other.m_color.y() &&
+			   m_color.z() == other.m_color.z() && m_color.w() == other.m_color.w();
+	}
+
+	bool Color::operator!=(const Color &other) const { return !(*this == other); }
+
 	Color::Color(uint8_t g) : m_color(g, g, g, 255) {}
-	Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) :
+	Color::Color(uint8_t r, uint8_t g, uint8_t b, float a) :
 			m_color(librapid::Vec4d(r, g, b, a) / 255.0f) {}
 
 	Color::Color(const librapid::Vec4f &color) : m_color(color) {}
 
 	Color Color::fromRGBA(const RGBA &rgba) {
-		return librapid::Vec4f{static_cast<float>(rgba.r) / 255.0f,
+		return librapid::Vec4f {static_cast<float>(rgba.r) / 255.0f,
 								static_cast<float>(rgba.g) / 255.0f,
 								static_cast<float>(rgba.b) / 255.0f,
-								static_cast<float>(rgba.a) / 255.0f};
+								rgba.a};
 	}
 
 	Color Color::fromHSVA(const HSVA &hsva) {
-		auto [r, g, b] = detail::hsvToRgb(hsva.h, hsva.s, hsva.v);
-		return librapid::Vec4f {static_cast<float>(r),
-								static_cast<float>(g),
-								static_cast<float>(b),
-								static_cast<float>(hsva.a)};
+		float h		   = librapid::clamp(hsva.h, 0.0f, 1.0f);
+		float s		   = librapid::clamp(hsva.s, 0.0f, 1.0f);
+		float v		   = librapid::clamp(hsva.v, 0.0f, 1.0f);
+		float a		   = librapid::clamp(hsva.a, 0.0f, 1.0f);
+		auto [r, g, b] = detail::hsvToRgb(h, s, v);
+		return librapid::Vec4f {
+		  static_cast<float>(r), static_cast<float>(g), static_cast<float>(b), a};
 	};
 
 	Color Color::fromHSLA(const HSLA &hsla) {
 		auto [r, g, b] = detail::hslToRgb(hsla.h, hsla.s, hsla.l);
-		return librapid::Vec4f {static_cast<uint8_t>(r * 255),
-								static_cast<uint8_t>(g * 255),
-								static_cast<uint8_t>(b * 255),
-								static_cast<uint8_t>(hsla.a * 255)};
+		return librapid::Vec4f {
+		  static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b), hsla.a};
 	}
 
 	RGB Color::rgb() const {
@@ -92,35 +105,48 @@ namespace surge {
 		return {static_cast<uint8_t>(m_color.x() * 255),
 				static_cast<uint8_t>(m_color.y() * 255),
 				static_cast<uint8_t>(m_color.z() * 255),
-				static_cast<uint8_t>(m_color.w() * 255)};
+				m_color.w()};
 	}
 
-	uint8_t Color::red() const { return static_cast<uint8_t>(m_color.x() * 255); }
-	uint8_t Color::green() const { return static_cast<uint8_t>(m_color.y() * 255); }
-	uint8_t Color::blue() const { return static_cast<uint8_t>(m_color.z() * 255); }
+	Color Color::random() {
+		return Color::fromRGBA({static_cast<uint8_t>(librapid::randint(0, 255)),
+								static_cast<uint8_t>(librapid::randint(0, 255)),
+								static_cast<uint8_t>(librapid::randint(0, 255)),
+								1.0f});
+	}
+
 	HSV Color::hsv() const { LIBRAPID_NOT_IMPLEMENTED; }
 	HSVA Color::hsva() const { LIBRAPID_NOT_IMPLEMENTED; }
-	float Color::hue() const { LIBRAPID_NOT_IMPLEMENTED; }
-	float Color::saturation() const { LIBRAPID_NOT_IMPLEMENTED; }
-	float Color::value() const { LIBRAPID_NOT_IMPLEMENTED; }
 	HSL Color::hsl() const { LIBRAPID_NOT_IMPLEMENTED; }
 	HSLA Color::hsla() const { LIBRAPID_NOT_IMPLEMENTED; }
-	float Color::lightness() const { LIBRAPID_NOT_IMPLEMENTED; }
-	float Color::alpha() const { return static_cast<uint8_t>(m_color.w() * 255); }
 
-	const Color colors::white	  = Color::fromRGBA({255, 255, 255, 255});
-	const Color colors::black	  = Color::fromRGBA({0, 0, 0, 255});
-	const Color colors::red		  = Color::fromRGBA({255, 0, 0, 255});
-	const Color colors::green	  = Color::fromRGBA({0, 255, 0, 255});
-	const Color colors::blue	  = Color::fromRGBA({0, 0, 255, 255});
-	const Color colors::yellow	  = Color::fromRGBA({255, 255, 0, 255});
-	const Color colors::cyan	  = Color::fromRGBA({0, 255, 255, 255});
-	const Color colors::magenta	  = Color::fromRGBA({255, 0, 255, 255});
-	const Color colors::orange	  = Color::fromRGBA({255, 165, 0, 255});
-	const Color colors::purple	  = Color::fromRGBA({128, 0, 128, 255});
-	const Color colors::brown	  = Color::fromRGBA({165, 42, 42, 255});
-	const Color colors::pink	  = Color::fromRGBA({255, 192, 203, 255});
-	const Color colors::gray	  = Color::fromRGBA({128, 128, 128, 255});
-	const Color colors::lightGray = Color::fromRGBA({211, 211, 211, 255});
-	const Color colors::darkGray  = Color::fromRGBA({169, 169, 169, 255});
+	const Color Color::empty		 = Color::fromRGBA({0, 0, 0, 0});
+	const Color Color::veryDarkGray	 = Color::fromRGBA({15, 15, 15, 1});
+	const Color Color::veryLightGray = Color::fromRGBA({240, 240, 240, 1});
+	const Color Color::lightGray	 = Color::fromRGBA({200, 200, 200, 1});
+	const Color Color::gray			 = Color::fromRGBA({130, 130, 130, 1});
+	const Color Color::darkGray		 = Color::fromRGBA({80, 80, 80, 1});
+	const Color Color::yellow		 = Color::fromRGBA({253, 249, 0, 1});
+	const Color Color::gold			 = Color::fromRGBA({255, 203, 0, 1});
+	const Color Color::orange		 = Color::fromRGBA({255, 161, 0, 1});
+	const Color Color::pink			 = Color::fromRGBA({255, 109, 194, 1});
+	const Color Color::red			 = Color::fromRGBA({230, 41, 55, 1});
+	const Color Color::maroon		 = Color::fromRGBA({190, 33, 55, 1});
+	const Color Color::green		 = Color::fromRGBA({0, 228, 48, 1});
+	const Color Color::lime			 = Color::fromRGBA({0, 158, 47, 1});
+	const Color Color::darkGreen	 = Color::fromRGBA({0, 117, 44, 1});
+	const Color Color::skyBlue		 = Color::fromRGBA({102, 191, 255, 1});
+	const Color Color::blue			 = Color::fromRGBA({0, 121, 241, 1});
+	const Color Color::darkBlue		 = Color::fromRGBA({0, 82, 172, 1});
+	const Color Color::purple		 = Color::fromRGBA({200, 122, 255, 1});
+	const Color Color::violet		 = Color::fromRGBA({135, 60, 190, 1});
+	const Color Color::darkPurple	 = Color::fromRGBA({112, 31, 126, 1});
+	const Color Color::beige		 = Color::fromRGBA({211, 176, 131, 1});
+	const Color Color::brown		 = Color::fromRGBA({127, 106, 79, 1});
+	const Color Color::darkBrown	 = Color::fromRGBA({76, 63, 47, 1});
+	const Color Color::white		 = Color::fromRGBA({255, 255, 255, 1});
+	const Color Color::black		 = Color::fromRGBA({0, 0, 0, 1});
+	const Color Color::blank		 = Color::fromRGBA({0, 0, 0, 0});
+	const Color Color::magenta		 = Color::fromRGBA({255, 0, 255, 1});
+	const Color Color::cyan			 = Color::fromRGBA({0, 255, 255, 1});
 } // namespace surge
