@@ -239,4 +239,7 @@ namespace surge {
 		std::string m_initialTitle;
 		Mouse m_mouse;
 	};
+
+	// Singleton instance of the window
+	extern Window window;
 } // namespace surge
