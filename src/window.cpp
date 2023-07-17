@@ -7,6 +7,15 @@ namespace surge {
 		static int64_t windowsCreated = 0;
 	}
 
+	Window::Window() {
+		detail::windowsCreated++;
+		LIBRAPID_ASSERT(detail::windowsCreated == 1,
+						"Only one window can be created at a time!\nIf you are trying to get/set a "
+						"property of the window, use the surge::window variable.");
+
+		window = *this;
+	}
+
 	Window::Window(const librapid::Vec2i &size, const std::string &title) :
 			m_initialSize(size), m_initialTitle(title) {
 		detail::windowsCreated++;
@@ -23,7 +32,7 @@ namespace surge {
 		// Cause a new frame to be drawn (initializes the frame size)
 		beginDrawing();
 		endDrawing();
-		
+
 		return *this;
 	}
 

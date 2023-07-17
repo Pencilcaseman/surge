@@ -3,7 +3,7 @@
 namespace surge {
 	class Window {
 	public:
-		Window() = default;
+		Window();
 
 		/// \breif Create a new window
 		///
