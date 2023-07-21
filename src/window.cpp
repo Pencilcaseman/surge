@@ -1,11 +1,39 @@
 #include <surge/surge.hpp>
 
 namespace surge {
+	Window window;
+
+	namespace detail {
+		static int64_t windowsCreated = 0;
+		static size_t frameCount = 0;
+	}
+
+	Window::Window() {
+		// detail::windowsCreated++;
+		// LIBRAPID_ASSERT(detail::windowsCreated == 1,
+		// 				"Only one window can be created at a time!\nIf you are trying to get/set a "
+		// 				"property of the window, use the surge::window variable.");
+
+		// window = *this;
+	}
+
 	Window::Window(const librapid::Vec2i &size, const std::string &title) :
-			m_initialSize(size), m_initialTitle(title) {}
+			m_initialSize(size), m_initialTitle(title) {
+		detail::windowsCreated++;
+		LIBRAPID_ASSERT(detail::windowsCreated == 1,
+						"Only one window can be created at a time!\nIf you are trying to get/set a "
+						"property of the window, use the surge::window variable.");
+
+		window = *this;
+	}
 
 	Window &Window::init() {
 		::InitWindow(m_initialSize.x(), m_initialSize.y(), m_initialTitle.c_str());
+
+		// Cause a new frame to be drawn (initializes the frame size)
+		beginDrawing();
+		endDrawing();
+
 		return *this;
 	}
 
@@ -144,7 +172,7 @@ namespace surge {
 
 	double Window::time() const { return ::GetTime(); }
 
-	int64_t Window::frameCount() const { return m_frameCount; }
+	int64_t Window::frameCount() const { return detail::frameCount; }
 
 	bool Window::isReady() const { return ::IsWindowReady(); }
 
@@ -162,7 +190,7 @@ namespace surge {
 
 	Window &Window::endDrawing() {
 		::EndDrawing();
-		++m_frameCount;
+		++detail::frameCount;
 		return *this;
 	}
 

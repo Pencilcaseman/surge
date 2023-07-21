@@ -2,6 +2,7 @@
 
 #include <librapid/librapid.hpp>
 #include <raylib.h>
+#include <filesystem>
 
 #if !defined(RAYLIB_VERSION_MAJOR) || !defined(RAYLIB_VERSION_MINOR) ||                            \
   RAYLIB_VERSION_MAJOR < 4 || RAYLIB_VERSION_MINOR < 5
@@ -217,8 +218,11 @@ namespace surge {
 	};
 } // namespace surge
 
+#include "transformations.hpp"
 #include "color.hpp"
 #include "mouse.hpp"
 #include "window.hpp"
 #include "line.hpp"
 #include "rectangle.hpp"
+#include "font.hpp"
+#include "text.hpp"
