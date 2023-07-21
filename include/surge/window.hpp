@@ -234,7 +234,6 @@ namespace surge {
 		// LIBRAPID_NODISCARD Keyboard &keyboard();
 		// LIBRAPID_NODISCARD const Keyboard &keyboard() const;
 	private:
-		int64_t m_frameCount = 0;
 		librapid::Vec2i m_initialSize;
 		std::string m_initialTitle;
 		Mouse m_mouse;
