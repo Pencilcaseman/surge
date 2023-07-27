@@ -209,13 +209,13 @@ namespace surge {
 		/// This function must be called before any drawing can be done. It triggers a frame to be
 		/// created.
 		/// \return A reference to the window
-		Window &beginDrawing();
+		Window &beginDrawing(bool withImGui = true);
 
 		/// \brief End drawing to the window
 		/// This function must be called after all drawing has been done. It triggers the frame to
 		/// be displayed.
 		/// \return A reference to the window
-		Window &endDrawing();
+		Window &endDrawing(bool withImGui = true);
 
 		/// \breif Draw the current FPS to the window at the given position
 		/// The text is drawn using the default font and automatically changes colour based on the

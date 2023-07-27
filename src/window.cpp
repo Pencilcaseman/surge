@@ -1,4 +1,5 @@
 #include <surge/surge.hpp>
+#include <raylibCoreData.h>
 
 namespace surge {
 	Window window;
@@ -30,27 +31,42 @@ namespace surge {
 	Window &Window::init() {
 		::RL_InitWindow(m_initialSize.x(), m_initialSize.y(), m_initialTitle.c_str());
 
+		// Cause a new frame to be drawn (initializes the frame size)
+		beginDrawing(false);
+		endDrawing(false);
+
 		// ImGui Setup
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGuiIO &io = ImGui::GetIO();
-		(void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
 		// ImGui::StyleColorsLight();
 
 		// ImGui platform and renderer bindings initialization
-		ImGui_ImplRaylib_Init();
-		ImGui_ImplOpenGL3_Init("#version 330");
+		// ImGui_ImplRaylib_Init();
+
+		ImGui_ImplGlfw_InitForOpenGL(surgeGetGLFWwindow(), false);
+		ImGui_ImplOpenGL3_Init();
+
+		ImGuiIO &io = ImGui::GetIO();
+		(void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;	  // Enable Docking
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;	  // Enable Multi-Viewport / Platform Windows
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			fmt::print("Viewports enabled!\n");
+			ImGui::GetStyle().WindowRounding = 0.0f;
+			ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 1.0f;
+		}
 
 		// Cause a new frame to be drawn (initializes the frame size)
-		beginDrawing();
-		endDrawing();
+		beginDrawing(false);
+		endDrawing(false);
 
 		return *this;
 	}
@@ -58,7 +74,8 @@ namespace surge {
 	Window::~Window() {
 		close();
 		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplRaylib_Shutdown();
+		// ImGui_ImplRaylib_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 	}
 
@@ -203,27 +220,34 @@ namespace surge {
 
 	void *Window::getHandle() const { return ::RL_GetWindowHandle(); }
 
-	Window &Window::beginDrawing() {
+	Window &Window::beginDrawing(bool withImGui) {
 		LIBRAPID_ASSERT(
 		  isReady(),
 		  "Window is not ready to be drawn on. Make sure you have called Window::init()");
 
 		::RL_BeginDrawing();
 
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplRaylib_NewFrame();
-		ImGui::NewFrame();
+		// ImGui_ImplOpenGL3_NewFrame();
+		// ImGui_ImplRaylib_NewFrame();
+
+		if (withImGui) {
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+		}
 
 		return *this;
 	}
 
-	Window &Window::endDrawing() {
+	Window &Window::endDrawing(bool withImGui) {
 		// Now handled in my fork of RayLib
 		// ImGui::Render();
 		// ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		::RL_EndDrawing();
-		loadCachedImGuiFonts();
+		::RL_EndDrawing(withImGui);
+
+		if (withImGui) { loadCachedImGuiFonts(); }
+
 		++detail::frameCount;
 		return *this;
 	}

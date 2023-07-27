@@ -6,7 +6,8 @@ file(GLOB_RECURSE SURGE_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
-list(APPEND SURGE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/compat/imguiRender.cpp")
+list(APPEND SURGE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/compat/imguiCompat.cpp")
+list(APPEND SURGE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/compat/raylibCoreData.c")
 
 set(module_name "surge")
 add_library(${module_name} STATIC ${SURGE_SOURCES})
@@ -28,7 +29,10 @@ set(IMGUI_SOURCES
         ${IMGUI_DIR}/imgui_draw.cpp
         ${IMGUI_DIR}/imgui_tables.cpp
         ${IMGUI_DIR}/imgui_widgets.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/compat/imgui_impl_raylib.cpp
+        # ${CMAKE_CURRENT_SOURCE_DIR}/compat/imgui_impl_raylib.cpp
+        # ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+
+        ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 )
 
