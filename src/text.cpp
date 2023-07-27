@@ -5,7 +5,7 @@ namespace surge {
 			m_text(text), m_font(font), m_lineHeight(lineHeight) {
 		if (m_lineHeight < 0) {
 			auto [width, height] =
-			  ::MeasureTextEx(font.font(), "dummy text", static_cast<float>(font.fontSize()), 0);
+			  ::RL_MeasureTextEx(font.font(), "dummy text", static_cast<float>(font.fontSize()), 0);
 			m_lineHeight = height;
 		}
 	}
@@ -22,8 +22,8 @@ namespace surge {
 	void Text::setFont(const Font &font) { m_font = font; }
 
 	librapid::Vec2d Text::size() const {
-		auto [width, height] =
-		  ::MeasureTextEx(m_font.font(), m_text.c_str(), static_cast<float>(m_font.fontSize()), 0);
+		auto [width, height] = ::RL_MeasureTextEx(
+		  m_font.font(), m_text.c_str(), static_cast<float>(m_font.fontSize()), 0);
 
 		return {static_cast<double>(width), static_cast<double>(height)};
 	}
@@ -59,31 +59,31 @@ namespace surge {
 			default: break;
 		}
 
-		SetTextLineSpacing(static_cast<int>(m_lineHeight));
+		::RL_SetTextLineSpacing(static_cast<int>(m_lineHeight));
 
 		if (m_font.initialized()) {
-			::DrawTextEx(m_font.font(),
-						 m_text.c_str(),
-						 {static_cast<float>(drawPos.x()), static_cast<float>(drawPos.y())},
-						 static_cast<float>(m_font.fontSize()),
-						 0,
-						 {
-						   r,
-						   g,
-						   b,
-						   static_cast<uint8_t>(a * 255),
-						 });
+			::RL_DrawTextEx(m_font.font(),
+							m_text.c_str(),
+							{static_cast<float>(drawPos.x()), static_cast<float>(drawPos.y())},
+							static_cast<float>(m_font.fontSize()),
+							0,
+							{
+							  r,
+							  g,
+							  b,
+							  static_cast<uint8_t>(a * 255),
+							});
 		} else {
-			::DrawText(m_text.c_str(),
-					   static_cast<int>(drawPos.x()),
-					   static_cast<int>(drawPos.y()),
-					   static_cast<int>(m_font.fontSize()),
-					   {
-						 r,
-						 g,
-						 b,
-						 static_cast<uint8_t>(a * 255),
-					   });
+			::RL_DrawText(m_text.c_str(),
+						  static_cast<int>(drawPos.x()),
+						  static_cast<int>(drawPos.y()),
+						  static_cast<int>(m_font.fontSize()),
+						  {
+							r,
+							g,
+							b,
+							static_cast<uint8_t>(a * 255),
+						  });
 		}
 	}
 } // namespace surge

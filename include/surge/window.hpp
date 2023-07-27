@@ -90,7 +90,7 @@ namespace surge {
 		/// \brief Set the window icon
 		/// \param image The image to use as the icon (surge::Image)
 		/// \return A reference to the window
-		Window &setIcon(const ::Image &image);
+		Window &setIcon(const ::RlImage &image);
 
 		/// \brief Set the window title
 		/// \param title The title to set (std::string)
