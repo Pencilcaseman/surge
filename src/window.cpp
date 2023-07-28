@@ -1,5 +1,6 @@
 #include <surge/surge.hpp>
 #include <raylibCoreData.h>
+#include <GLFW/glfw3.h>
 
 namespace surge {
 	Window window;
@@ -30,39 +31,6 @@ namespace surge {
 
 	Window &Window::init() {
 		::RL_InitWindow(m_initialSize.x(), m_initialSize.y(), m_initialTitle.c_str());
-
-		// Cause a new frame to be drawn (initializes the frame size)
-		beginDrawing(false);
-		endDrawing(false);
-
-		// ImGui Setup
-
-		// Setup Dear ImGui context
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-
-		// Setup Dear ImGui style
-		ImGui::StyleColorsDark();
-		// ImGui::StyleColorsLight();
-
-		// ImGui platform and renderer bindings initialization
-		// ImGui_ImplRaylib_Init();
-
-		ImGui_ImplGlfw_InitForOpenGL(surgeGetGLFWwindow(), false);
-		ImGui_ImplOpenGL3_Init();
-
-		ImGuiIO &io = ImGui::GetIO();
-		(void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;	  // Enable Docking
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;	  // Enable Multi-Viewport / Platform Windows
-
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-			fmt::print("Viewports enabled!\n");
-			ImGui::GetStyle().WindowRounding = 0.0f;
-			ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 1.0f;
-		}
 
 		// Cause a new frame to be drawn (initializes the frame size)
 		beginDrawing(false);
@@ -231,6 +199,7 @@ namespace surge {
 		// ImGui_ImplRaylib_NewFrame();
 
 		if (withImGui) {
+			glfwMakeContextCurrent(surgeGetGLFWwindow());
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
