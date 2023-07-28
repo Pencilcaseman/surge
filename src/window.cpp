@@ -39,13 +39,7 @@ namespace surge {
 		return *this;
 	}
 
-	Window::~Window() {
-		close();
-		ImGui_ImplOpenGL3_Shutdown();
-		// ImGui_ImplRaylib_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-	}
+	Window::~Window() { close(); }
 
 	void Window::close() { ::RL_CloseWindow(); }
 
@@ -215,7 +209,10 @@ namespace surge {
 
 		::RL_EndDrawing(withImGui);
 
-		if (withImGui) { loadCachedImGuiFonts(); }
+		if (withImGui) {
+			loadCachedImGuiFonts();
+			updateUncachedFont();
+		}
 
 		++detail::frameCount;
 		return *this;

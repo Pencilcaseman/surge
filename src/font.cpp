@@ -2,7 +2,15 @@
 
 namespace surge {
 	namespace detail {
-		static std::queue<std::string> imGuiFontQueue;
+		struct FontPair {
+			::RlFont rlFont;
+			ImFont *imFont;
+		};
+
+		static std::queue<std::pair<std::string, int64_t>> imGuiFontQueue;
+		static librapid::UnorderedMap<std::string, FontPair> fontCache;
+		static bool shouldSetImGuiFont = false;
+		static Font imGuiFontToSet;
 
 		bool stringEndsWith(const std::string &str, const std::string &suffix) {
 			return str.size() >= suffix.size() &&
@@ -117,52 +125,111 @@ namespace surge {
 			return "";
 		}
 
+		ImFont *loadFontIntoImGui(const std::string &fontName, float fontSize) {
+			bool found;
+			std::string filePath = findFontFile(fontName, found);
+			if (!found) {
+				LIBRAPID_WARN("Could not find font file: " + fontName);
+				return nullptr;
+			}
+
+			ImGuiIO &io		   = ImGui::GetIO();
+			ImFontAtlas *atlas = io.Fonts;
+			ImFontConfig cfg;
+
+			// Load the font
+			ImFont *font = atlas->AddFontFromFileTTF(filePath.c_str(), fontSize, &cfg);
+
+			if (font) {
+				// Build a new texture with the new font
+				atlas->Build();
+
+				// Get the new texture data
+				unsigned char *pixels;
+				int width, height;
+				atlas->GetTexDataAsRGBA32(&pixels, &width, &height);
+
+				// Upload the new texture data to the GPU
+				GLuint new_texture;
+				glGenTextures(1, &new_texture);
+				glBindTexture(GL_TEXTURE_2D, new_texture);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+				glTexImage2D(
+				  GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+				// Delete the old texture and set the new one in the ImGui backend
+				glDeleteTextures(1, reinterpret_cast<const GLuint *>(&io.Fonts->TexID));
+				io.Fonts->TexID = (ImTextureID)(intptr_t)new_texture;
+			} else {
+				// Error loading font
+				LIBRAPID_WARN("Could not load font '{}' into ImGui", filePath);
+			}
+
+			return font;
+		}
+
 		std::string fontHash(const std::string &fontName, int64_t fontSize) {
 			return fmt::format("{}-{}", fontName, fontSize);
 		}
 
-		::RlFont &fontCache(const std::string &fontName, int64_t fontSize) {
-			static librapid::UnorderedMap<std::string, ::RlFont> cache;
+		FontPair &loadFromFontCache(const std::string &fontName, int64_t fontSize) {
 			std::string fontHash = detail::fontHash(fontName, fontSize);
 
 			// If the font is cached, return it
-			if (cache.contains(fontHash)) {
-				return cache[fontHash];
+			if (fontCache.contains(fontHash)) {
+				return fontCache[fontHash];
 			} else {
 				// Otherwise, create it and cache it
 				bool found;
 				std::string filePath = detail::findFontFile(fontName, found);
 				if (found) {
-					// Load font into RayLib
-					cache[fontHash] =
+					FontPair pair {};
+
+					// RayLib Font
+					pair.rlFont =
 					  ::RL_LoadFontEx(filePath.c_str(), static_cast<int>(fontSize), nullptr, 0);
 
-					// Add font to imGuiFontQueue
-					imGuiFontQueue.emplace(filePath);
+					// ImGui Font
+					pair.imFont = nullptr;
+					imGuiFontQueue.emplace(fontName, fontSize);
+
+					fontCache[fontHash] = pair;
 				} else {
 					SURGE_WARN_ONCE("Could not find font file for '{}'", fontName);
-					cache[fontHash] = ::RL_GetFontDefault();
+					fontCache[fontHash].rlFont = ::RL_GetFontDefault();
+					fontCache[fontHash].imFont = nullptr;
 				}
 
-				return cache[fontHash];
+				return fontCache[fontHash];
 			}
 		}
 	} // namespace detail
 
 	Font::Font(const std::string &fontName, int64_t fontSize) {
-		m_fontName	  = fontName;
-		m_fontSize	  = fontSize;
-		m_initialized = true;
+		m_fontName					  = fontName;
+		m_fontSize					  = fontSize;
+		m_initialized				  = true;
+		[[maybe_unused]] auto tmpFont = rlFont();
 	}
 
 	bool Font::initialized() const { return m_initialized; }
 	const std::string &Font::fontName() const { return m_fontName; }
-	int64_t Font::fontSize() const { return m_fontSize; }
+	int64_t Font::size() const { return m_fontSize; }
 
 	std::string &Font::fontName() { return m_fontName; }
-	int64_t &Font::fontSize() { return m_fontSize; }
+	int64_t &Font::size() { return m_fontSize; }
 
-	::RlFont Font::font() const { return detail::fontCache(m_fontName, m_fontSize); }
+	::RlFont Font::rlFont() const {
+		return detail::loadFromFontCache(m_fontName, m_fontSize).rlFont;
+	}
+
+	ImFont *Font::imFont() const {
+		return detail::loadFromFontCache(m_fontName, m_fontSize).imFont;
+	}
+
+	void Font::setImGuiFont(ImFont *font) { m_imGuiFont = font; }
 
 	Font operator|(const Font &lhs, Modifiers rhs) {
 		Font result = lhs;
@@ -171,29 +238,30 @@ namespace surge {
 		return result;
 	}
 
-	void loadFontIntoImGui(const std::string &filePath, int64_t fontSize) {
-		// Load font into ImGui
-		ImGuiIO &io = ImGui::GetIO();
-		if (detail::stringEndsWith(filePath, ".ttf") || detail::stringEndsWith(filePath, ".otf") ||
-			detail::stringEndsWith(filePath, ".ttc") || detail::stringEndsWith(filePath, ".TTF") ||
-			detail::stringEndsWith(filePath, ".OTF") || detail::stringEndsWith(filePath, ".TTC") ||
-			detail::stringEndsWith(filePath, ".Ttf") || detail::stringEndsWith(filePath, ".Otf") ||
-			detail::stringEndsWith(filePath, ".Ttc")) {
-			io.Fonts->AddFontFromFileTTF(filePath.c_str(), static_cast<float>(fontSize));
-		} else {
-			LIBRAPID_WARN("Could not load font '{}' into ImGui", filePath);
-		}
-	}
-
 	void loadCachedImGuiFonts() {
-		if (detail::imGuiFontQueue.empty()) return;
-
 		while (!detail::imGuiFontQueue.empty()) {
-			loadFontIntoImGui(detail::imGuiFontQueue.front(), 16);
+			auto &[fontName, fontSize]		   = detail::imGuiFontQueue.front();
+			std::string fontHash			   = detail::fontHash(fontName, fontSize);
+			detail::fontCache[fontHash].imFont = detail::loadFontIntoImGui(fontName, fontSize);
 			detail::imGuiFontQueue.pop();
 		}
+	}
 
-		ImGuiIO &io = ImGui::GetIO();
-		io.Fonts->Build();
+	void updateUncachedFont() {
+		if (detail::shouldSetImGuiFont) {
+			detail::shouldSetImGuiFont = false;
+			ImGui::SetFont(detail::imGuiFontToSet);
+		}
 	}
 } // namespace surge
+
+namespace ImGui {
+	void SetFont(const surge::Font &font) {
+		if (!font.imFont()) {
+			surge::detail::shouldSetImGuiFont = true;
+			surge::detail::imGuiFontToSet	  = font;
+		}
+		// ImGui::SetCurrentFont(font.imFont());
+		ImGui::GetIO().FontDefault = font.imFont();
+	}
+} // namespace ImGui

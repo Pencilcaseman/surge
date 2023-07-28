@@ -1,8 +1,9 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <implot.h>
+#include <implot_internal.h>
 #include <GLFW/glfw3.h>
-#include <cstdio>
 
 #define SURGE_IMGUI_COMPAT_NO_GLFW
 #include "imguiCompat.h"
@@ -15,6 +16,7 @@ void imGuiInit(struct GLFWwindow *window) {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+	ImPlot::CreateContext();
 
 	ImGuiIO &io = ImGui::GetIO();
 	(void)io;
@@ -33,6 +35,13 @@ void imGuiInit(struct GLFWwindow *window) {
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
+}
+
+void cleanupImGui() {
+	// ImGui_ImplOpenGL3_Shutdown();
+	// ImGui_ImplGlfw_Shutdown();
+	ImPlot::DestroyContext();
+	ImGui::DestroyContext();
 }
 
 void imGuiRender() {

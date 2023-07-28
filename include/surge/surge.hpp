@@ -4,11 +4,10 @@
 #include <librapid/librapid.hpp>
 
 #include <imgui.h>
-// #include <imgui_impl_raylib.h>
-// #include <imgui_impl_opengl3.h>
-
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <implot.h>
+#include <implot_internal.h>
 #include <raylib.h>
 
 #if !defined(RAYLIB_VERSION_MAJOR) || !defined(RAYLIB_VERSION_MINOR) ||                            \

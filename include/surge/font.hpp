@@ -15,18 +15,21 @@ namespace surge {
 		Font &operator=(const Font &other)	   = default;
 		Font &operator=(Font &&other) noexcept = default;
 
-		bool initialized() const;
-		const std::string &fontName() const;
-		int64_t fontSize() const;
-		::RlFont font() const;
+		LIBRAPID_NODISCARD bool initialized() const;
+		LIBRAPID_NODISCARD const std::string &fontName() const;
+		LIBRAPID_NODISCARD std::string &fontName();
+		LIBRAPID_NODISCARD int64_t size() const;
+		LIBRAPID_NODISCARD int64_t &size();
+		LIBRAPID_NODISCARD ::RlFont rlFont() const;
+		LIBRAPID_NODISCARD ImFont *imFont() const;
 
-		std::string &fontName();
-		int64_t &fontSize();
+		void setImGuiFont(ImFont *font);
 
 	private:
 		bool m_initialized = false;
 		std::string m_fontName;
 		int64_t m_fontSize = 20;
+		ImFont *m_imGuiFont = nullptr;
 	};
 
 	enum class Modifiers { Bold, Italic };
@@ -34,6 +37,10 @@ namespace surge {
 	Font operator|(const Font &lhs, Modifiers rhs);
 	Font operator|(Modifiers lhs, const Font &rhs);
 
-	void loadFontToImGui(const std::string &filePath);
 	void loadCachedImGuiFonts();
+	void updateUncachedFont();
 } // namespace surge
+
+namespace ImGui {
+	void SetFont(const surge::Font &font);
+}

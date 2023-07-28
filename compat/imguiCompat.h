@@ -9,6 +9,7 @@ extern "C" {
 #endif
 
 void imGuiInit(struct GLFWwindow *window);
+void cleanupImGui();
 void imGuiRender();
 
 #if defined(__cplusplus)
