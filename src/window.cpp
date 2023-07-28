@@ -39,9 +39,7 @@ namespace surge {
 		return *this;
 	}
 
-	Window::~Window() {
-		close();
-	}
+	Window::~Window() { close(); }
 
 	void Window::close() { ::RL_CloseWindow(); }
 
@@ -211,7 +209,10 @@ namespace surge {
 
 		::RL_EndDrawing(withImGui);
 
-		if (withImGui) { loadCachedImGuiFonts(); }
+		if (withImGui) {
+			loadCachedImGuiFonts();
+			updateUncachedFont();
+		}
 
 		++detail::frameCount;
 		return *this;

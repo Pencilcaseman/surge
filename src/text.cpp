@@ -5,7 +5,7 @@ namespace surge {
 			m_text(text), m_font(font), m_lineHeight(lineHeight) {
 		if (m_lineHeight < 0) {
 			auto [width, height] =
-			  ::RL_MeasureTextEx(font.font(), "dummy text", static_cast<float>(font.fontSize()), 0);
+			  ::RL_MeasureTextEx(font.rlFont(), "dummy text", static_cast<float>(font.size()), 0);
 			m_lineHeight = height;
 		}
 	}
@@ -23,7 +23,7 @@ namespace surge {
 
 	librapid::Vec2d Text::size() const {
 		auto [width, height] = ::RL_MeasureTextEx(
-		  m_font.font(), m_text.c_str(), static_cast<float>(m_font.fontSize()), 0);
+		  m_font.rlFont(), m_text.c_str(), static_cast<float>(m_font.size()), 0);
 
 		return {static_cast<double>(width), static_cast<double>(height)};
 	}
@@ -62,10 +62,10 @@ namespace surge {
 		::RL_SetTextLineSpacing(static_cast<int>(m_lineHeight));
 
 		if (m_font.initialized()) {
-			::RL_DrawTextEx(m_font.font(),
+			::RL_DrawTextEx(m_font.rlFont(),
 							m_text.c_str(),
 							{static_cast<float>(drawPos.x()), static_cast<float>(drawPos.y())},
-							static_cast<float>(m_font.fontSize()),
+							static_cast<float>(m_font.size()),
 							0,
 							{
 							  r,
@@ -77,7 +77,7 @@ namespace surge {
 			::RL_DrawText(m_text.c_str(),
 						  static_cast<int>(drawPos.x()),
 						  static_cast<int>(drawPos.y()),
-						  static_cast<int>(m_font.fontSize()),
+						  static_cast<int>(m_font.size()),
 						  {
 							r,
 							g,
