@@ -2,9 +2,11 @@
 
 namespace surge {
 	namespace detail {
-		std::string capitalizeFirstLetter(std::string str) {
-			if (!str.empty()) { str[0] = std::toupper(str[0]); }
-			return str;
+		static std::queue<std::string> imGuiFontQueue;
+
+		bool stringEndsWith(const std::string &str, const std::string &suffix) {
+			return str.size() >= suffix.size() &&
+				   str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 		}
 
 		std::string findFontFile(const std::string &fontName, bool &found, bool retry) {
@@ -119,8 +121,8 @@ namespace surge {
 			return fmt::format("{}-{}", fontName, fontSize);
 		}
 
-		::Font &fontCache(const std::string &fontName, int64_t fontSize) {
-			static librapid::UnorderedMap<std::string, ::Font> cache;
+		::RlFont &fontCache(const std::string &fontName, int64_t fontSize) {
+			static librapid::UnorderedMap<std::string, ::RlFont> cache;
 			std::string fontHash = detail::fontHash(fontName, fontSize);
 
 			// If the font is cached, return it
@@ -131,11 +133,15 @@ namespace surge {
 				bool found;
 				std::string filePath = detail::findFontFile(fontName, found);
 				if (found) {
+					// Load font into RayLib
 					cache[fontHash] =
-					  ::LoadFontEx(filePath.c_str(), static_cast<int>(fontSize), nullptr, 0);
+					  ::RL_LoadFontEx(filePath.c_str(), static_cast<int>(fontSize), nullptr, 0);
+
+					// Add font to imGuiFontQueue
+					imGuiFontQueue.emplace(filePath);
 				} else {
 					SURGE_WARN_ONCE("Could not find font file for '{}'", fontName);
-					cache[fontHash] = ::GetFontDefault();
+					cache[fontHash] = ::RL_GetFontDefault();
 				}
 
 				return cache[fontHash];
@@ -156,12 +162,38 @@ namespace surge {
 	std::string &Font::fontName() { return m_fontName; }
 	int64_t &Font::fontSize() { return m_fontSize; }
 
-	::Font Font::font() const { return detail::fontCache(m_fontName, m_fontSize); }
+	::RlFont Font::font() const { return detail::fontCache(m_fontName, m_fontSize); }
 
 	Font operator|(const Font &lhs, Modifiers rhs) {
 		Font result = lhs;
 		if (rhs == Modifiers::Bold) result.fontName() += "b";
 		if (rhs == Modifiers::Italic) result.fontName() += "i";
 		return result;
+	}
+
+	void loadFontIntoImGui(const std::string &filePath, int64_t fontSize) {
+		// Load font into ImGui
+		ImGuiIO &io = ImGui::GetIO();
+		if (detail::stringEndsWith(filePath, ".ttf") || detail::stringEndsWith(filePath, ".otf") ||
+			detail::stringEndsWith(filePath, ".ttc") || detail::stringEndsWith(filePath, ".TTF") ||
+			detail::stringEndsWith(filePath, ".OTF") || detail::stringEndsWith(filePath, ".TTC") ||
+			detail::stringEndsWith(filePath, ".Ttf") || detail::stringEndsWith(filePath, ".Otf") ||
+			detail::stringEndsWith(filePath, ".Ttc")) {
+			io.Fonts->AddFontFromFileTTF(filePath.c_str(), static_cast<float>(fontSize));
+		} else {
+			LIBRAPID_WARN("Could not load font '{}' into ImGui", filePath);
+		}
+	}
+
+	void loadCachedImGuiFonts() {
+		if (detail::imGuiFontQueue.empty()) return;
+
+		while (!detail::imGuiFontQueue.empty()) {
+			loadFontIntoImGui(detail::imGuiFontQueue.front(), 16);
+			detail::imGuiFontQueue.pop();
+		}
+
+		ImGuiIO &io = ImGui::GetIO();
+		io.Fonts->Build();
 	}
 } // namespace surge

@@ -2,12 +2,12 @@
 
 namespace surge {
 	Mouse &Mouse::show() {
-		ShowCursor();
+		::RL_ShowCursor();
 		return *this;
 	}
 
 	Mouse &Mouse::hide() {
-		HideCursor();
+		::RL_HideCursor();
 		return *this;
 	}
 
@@ -20,15 +20,15 @@ namespace surge {
 		return *this;
 	}
 
-	bool Mouse::isVisible() const { return !IsCursorHidden(); }
+	bool Mouse::isVisible() const { return !::RL_IsCursorHidden(); }
 
 	Mouse &Mouse::enable() {
-		EnableCursor();
+		::RL_EnableCursor();
 		return *this;
 	}
 
 	Mouse &Mouse::disable() {
-		DisableCursor();
+		::RL_DisableCursor();
 		return *this;
 	}
 
@@ -41,59 +41,59 @@ namespace surge {
 		return *this;
 	}
 
-	bool Mouse::isOnWindow() const { return IsCursorOnScreen(); }
+	bool Mouse::isOnWindow() const { return ::RL_IsCursorOnScreen(); }
 
 	bool Mouse::isButtonPressed(MouseButton button) const {
-		return IsMouseButtonPressed((int)button);
+		return ::RL_IsMouseButtonPressed((int)button);
 	}
 
-	bool Mouse::isButtonDown(MouseButton button) const { return IsMouseButtonDown((int)button); }
+	bool Mouse::isButtonDown(MouseButton button) const { return ::RL_IsMouseButtonDown((int)button); }
 
 	bool Mouse::isButtonReleased(MouseButton button) const {
-		return IsMouseButtonReleased((int)button);
+		return ::RL_IsMouseButtonReleased((int)button);
 	}
 
-	bool Mouse::isButtonUp(MouseButton button) const { return IsMouseButtonUp((int)button); }
+	bool Mouse::isButtonUp(MouseButton button) const { return ::RL_IsMouseButtonUp((int)button); }
 
 	librapid::Vec2f Mouse::pos() const {
-		auto [x, y] = GetMousePosition();
+		auto [x, y] = ::RL_GetMousePosition();
 		return {x, y};
 	}
 
 	librapid::Vec2f Mouse::screenSpacePos() const {
-		auto [x, y] = GetWindowPosition();
+		auto [x, y] = ::RL_GetWindowPosition();
 		return librapid::Vec2f(x, y) + pos();
 	}
 
 	librapid::Vec2f Mouse::delta() const {
-		auto [x, y] = GetMouseDelta();
+		auto [x, y] = ::RL_GetMouseDelta();
 		return {x, y};
 	}
 
 	Mouse &Mouse::setPosition(const librapid::Vec2f &position) {
-		SetMousePosition(position.x(), position.y());
+		::RL_SetMousePosition(position.x(), position.y());
 		return *this;
 	}
 
 	Mouse &Mouse::setOffset(const librapid::Vec2f &offset) {
-		SetMouseOffset(offset.x(), offset.y());
+		::RL_SetMouseOffset(offset.x(), offset.y());
 		return *this;
 	}
 
 	Mouse &Mouse::setScale(const librapid::Vec2f &scale) {
-		SetMouseScale(scale.x(), scale.y());
+		::RL_SetMouseScale(scale.x(), scale.y());
 		return *this;
 	}
 
 	librapid::Vec2f Mouse::wheel() const {
-		auto [x, y] = GetMouseWheelMoveV();
+		auto [x, y] = ::RL_GetMouseWheelMoveV();
 		return {x, y};
 	}
 
-	float Mouse::wheelMax() const { return GetMouseWheelMove(); }
+	float Mouse::wheelMax() const { return ::RL_GetMouseWheelMove(); }
 
 	Mouse &Mouse::setCursor(MouseCursor cursor) {
-		SetMouseCursor((int)cursor);
+		::RL_SetMouseCursor((int)cursor);
 		return *this;
 	}
 } // namespace surge

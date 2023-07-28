@@ -50,7 +50,7 @@ namespace surge {
 		SURGE_WARN_ONCE(m_rotation == 0.0f, "Rotated rectangles cannot be drawn with lines.");
 
 		if (m_roundness == 0) {
-			DrawRectangleLinesEx(
+			::RL_DrawRectangleLinesEx(
 			  {
 				static_cast<float>(m_pos.x()),
 				static_cast<float>(m_pos.y()),
@@ -60,7 +60,7 @@ namespace surge {
 			  m_thickness,
 			  {r, g, b, static_cast<uint8_t>(a * 255)});
 		} else {
-			DrawRectangleRoundedLines(
+			::RL_DrawRectangleRoundedLines(
 			  {
 				static_cast<float>(m_pos.x()),
 				static_cast<float>(m_pos.y()),
@@ -84,21 +84,22 @@ namespace surge {
 			auto halfSize = m_size * 0.5f;
 			auto drawPos  = m_pos + halfSize;
 
-			DrawRectanglePro({static_cast<float>(drawPos.x()),
-							  static_cast<float>(drawPos.y()),
-							  static_cast<float>(m_size.x()),
-							  static_cast<float>(m_size.y())},
-							 {static_cast<float>(halfSize.x()), static_cast<float>(halfSize.y())},
-							 m_rotation * static_cast<float>(librapid::RADTODEG),
-							 {r, g, b, static_cast<uint8_t>(a * 255)});
+			::RL_DrawRectanglePro(
+			  {static_cast<float>(drawPos.x()),
+			   static_cast<float>(drawPos.y()),
+			   static_cast<float>(m_size.x()),
+			   static_cast<float>(m_size.y())},
+			  {static_cast<float>(halfSize.x()), static_cast<float>(halfSize.y())},
+			  m_rotation * static_cast<float>(librapid::RADTODEG),
+			  {r, g, b, static_cast<uint8_t>(a * 255)});
 		} else if (m_roundness == 0) {
-			DrawRectangle(static_cast<int>(m_pos.x()),
-						  static_cast<int>(m_pos.y()),
-						  static_cast<int>(m_size.x()),
-						  static_cast<int>(m_size.y()),
-						  {r, g, b, static_cast<uint8_t>(a * 255)});
+			::RL_DrawRectangle(static_cast<int>(m_pos.x()),
+							   static_cast<int>(m_pos.y()),
+							   static_cast<int>(m_size.x()),
+							   static_cast<int>(m_size.y()),
+							   {r, g, b, static_cast<uint8_t>(a * 255)});
 		} else {
-			DrawRectangleRounded(
+			::RL_DrawRectangleRounded(
 			  {
 				static_cast<float>(m_pos.x()),
 				static_cast<float>(m_pos.y()),
@@ -120,7 +121,7 @@ namespace surge {
 		SURGE_WARN_ONCE(m_roundness == 0.0f, "Rounded rectangles cannot be drawn with a gradient.");
 		SURGE_WARN_ONCE(m_rotation == 0.0f, "Rotated rectangles cannot be drawn with a gradient.");
 
-		DrawRectangleGradientEx(
+		::RL_DrawRectangleGradientEx(
 		  {
 			static_cast<float>(m_pos.x()),
 			static_cast<float>(m_pos.y()),

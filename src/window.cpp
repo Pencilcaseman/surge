@@ -1,12 +1,14 @@
 #include <surge/surge.hpp>
+#include <raylibCoreData.h>
+#include <GLFW/glfw3.h>
 
 namespace surge {
 	Window window;
 
 	namespace detail {
 		static int64_t windowsCreated = 0;
-		static size_t frameCount = 0;
-	}
+		static size_t frameCount	  = 0;
+	} // namespace detail
 
 	Window::Window() {
 		// detail::windowsCreated++;
@@ -28,46 +30,52 @@ namespace surge {
 	}
 
 	Window &Window::init() {
-		::InitWindow(m_initialSize.x(), m_initialSize.y(), m_initialTitle.c_str());
+		::RL_InitWindow(m_initialSize.x(), m_initialSize.y(), m_initialTitle.c_str());
 
 		// Cause a new frame to be drawn (initializes the frame size)
-		beginDrawing();
-		endDrawing();
+		beginDrawing(false);
+		endDrawing(false);
 
 		return *this;
 	}
 
-	Window::~Window() { close(); }
+	Window::~Window() {
+		close();
+		ImGui_ImplOpenGL3_Shutdown();
+		// ImGui_ImplRaylib_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+	}
 
-	void Window::close() { ::CloseWindow(); }
+	void Window::close() { ::RL_CloseWindow(); }
 
-	bool Window::isCursorOnScreen() const { return ::IsCursorOnScreen(); }
-	bool Window::isFullscreen() const { return ::IsWindowFullscreen(); }
-	bool Window::isHidden() const { return ::IsWindowHidden(); }
-	bool Window::isMinimized() const { return ::IsWindowMinimized(); }
-	bool Window::isMaximized() const { return ::IsWindowMaximized(); }
-	bool Window::isFocused() const { return ::IsWindowFocused(); }
-	bool Window::isResized() const { return ::IsWindowResized(); }
+	bool Window::isCursorOnScreen() const { return ::RL_IsCursorOnScreen(); }
+	bool Window::isFullscreen() const { return ::RL_IsWindowFullscreen(); }
+	bool Window::isHidden() const { return ::RL_IsWindowHidden(); }
+	bool Window::isMinimized() const { return ::RL_IsWindowMinimized(); }
+	bool Window::isMaximized() const { return ::RL_IsWindowMaximized(); }
+	bool Window::isFocused() const { return ::RL_IsWindowFocused(); }
+	bool Window::isResized() const { return ::RL_IsWindowResized(); }
 	bool Window::isState(uint64_t flag) const {
-		return ::IsWindowState(static_cast<unsigned int>(flag));
+		return ::RL_IsWindowState(static_cast<unsigned int>(flag));
 	}
 
 	Window &Window::setFlag(WindowFlag flag, bool state) {
 		if (state)
-			::SetWindowState(static_cast<unsigned int>(flag));
+			::RL_SetWindowState(static_cast<unsigned int>(flag));
 		else
-			::ClearWindowState(static_cast<unsigned int>(flag));
+			::RL_ClearWindowState(static_cast<unsigned int>(flag));
 		return *this;
 	}
 
 	Window &Window::clear(const Color &color) {
 		auto [r, g, b, a] = color.rgba();
-		::ClearBackground({r, g, b, static_cast<uint8_t>(a * 255)});
+		::RL_ClearBackground({r, g, b, static_cast<uint8_t>(a * 255)});
 		return *this;
 	}
 
 	Window &Window::toggleFullscreen() {
-		::ToggleFullscreen();
+		::RL_ToggleFullscreen();
 		return *this;
 	}
 
@@ -77,75 +85,75 @@ namespace surge {
 	}
 
 	Window &Window::maximize() {
-		::MaximizeWindow();
+		::RL_MaximizeWindow();
 		return *this;
 	}
 
 	Window &Window::minimize() {
-		::MinimizeWindow();
+		::RL_MinimizeWindow();
 		return *this;
 	}
 
 	Window &Window::restore() {
-		::RestoreWindow();
+		::RL_RestoreWindow();
 		return *this;
 	}
 
-	Window &Window::setIcon(const ::Image &image) {
-		::SetWindowIcon(image);
+	Window &Window::setIcon(const ::RlImage &image) {
+		::RL_SetWindowIcon(image);
 		return *this;
 	}
 
 	Window &Window::setTitle(const std::string &title) {
-		::SetWindowTitle(title.c_str());
+		::RL_SetWindowTitle(title.c_str());
 		return *this;
 	}
 
 	Window &Window::setPosition(const librapid::Vec2i &pos) {
-		::SetWindowPosition(pos.x(), pos.y());
+		::RL_SetWindowPosition(pos.x(), pos.y());
 		return *this;
 	}
 
 	Window &Window::setMonitor(int64_t monitor) {
-		::SetWindowMonitor(static_cast<int>(monitor));
+		::RL_SetWindowMonitor(static_cast<int>(monitor));
 		return *this;
 	}
 
 	Window &Window::setMinSize(const librapid::Vec2i &size) {
-		::SetWindowMinSize(size.x(), size.y());
+		::RL_SetWindowMinSize(size.x(), size.y());
 		return *this;
 	}
 
 	Window &Window::setSize(const librapid::Vec2i &size) {
-		::SetWindowSize(size.x(), size.y());
+		::RL_SetWindowSize(size.x(), size.y());
 		return *this;
 	}
 
 	Window &Window::setOpacity(float opacity) {
-		::SetWindowOpacity(opacity);
+		::RL_SetWindowOpacity(opacity);
 		return *this;
 	}
 
 	Window &Window::setTargetFPS(int64_t fps) {
-		::SetTargetFPS(static_cast<int>(fps));
+		::RL_SetTargetFPS(static_cast<int>(fps));
 		return *this;
 	}
 
-	std::string Window::getClipboardText() const { return ::GetClipboardText(); }
+	std::string Window::getClipboardText() const { return ::RL_GetClipboardText(); }
 
 	Window &Window::setClipboardText(const std::string &text) {
-		::SetClipboardText(text.c_str());
+		::RL_SetClipboardText(text.c_str());
 		return *this;
 	}
 
 	librapid::Vec2i Window::size() const { return {width(), height()}; }
-	int64_t Window::width() const { return ::GetScreenWidth(); }
-	int64_t Window::height() const { return ::GetScreenHeight(); }
-	int64_t Window::renderWidth() const { return ::GetRenderWidth(); }
-	int64_t Window::renderHeight() const { return ::GetRenderHeight(); }
+	int64_t Window::width() const { return ::RL_GetScreenWidth(); }
+	int64_t Window::height() const { return ::RL_GetScreenHeight(); }
+	int64_t Window::renderWidth() const { return ::RL_GetRenderWidth(); }
+	int64_t Window::renderHeight() const { return ::RL_GetRenderHeight(); }
 
 	librapid::Vec2i Window::position() const {
-		Vector2 ret = ::GetWindowPosition();
+		::RlVector2 ret = ::RL_GetWindowPosition();
 		return {ret.x, ret.y};
 	}
 
@@ -160,49 +168,68 @@ namespace surge {
 	//	}
 
 	librapid::Vec2i Window::scaleDPI() const {
-		Vector2 ret = GetWindowScaleDPI();
+		::RlVector2 ret = ::RL_GetWindowScaleDPI();
 		return {ret.x, ret.y};
 	}
 
-	int64_t Window::monitorCount() const { return ::GetMonitorCount(); }
+	int64_t Window::monitorCount() const { return ::RL_GetMonitorCount(); }
 
-	int64_t Window::fps() const { return ::GetFPS(); }
+	int64_t Window::fps() const { return ::RL_GetFPS(); }
 
-	float Window::frameTime() const { return ::GetFrameTime(); }
+	float Window::frameTime() const { return ::RL_GetFrameTime(); }
 
-	double Window::time() const { return ::GetTime(); }
+	double Window::time() const { return ::RL_GetTime(); }
 
 	int64_t Window::frameCount() const { return detail::frameCount; }
 
-	bool Window::isReady() const { return ::IsWindowReady(); }
+	bool Window::isReady() const { return ::RL_IsWindowReady(); }
 
-	bool Window::shouldClose() const { return ::WindowShouldClose(); }
+	bool Window::shouldClose() const { return ::RL_WindowShouldClose(); }
 
-	void *Window::getHandle() const { return ::GetWindowHandle(); }
+	void *Window::getHandle() const { return ::RL_GetWindowHandle(); }
 
-	Window &Window::beginDrawing() {
+	Window &Window::beginDrawing(bool withImGui) {
 		LIBRAPID_ASSERT(
 		  isReady(),
 		  "Window is not ready to be drawn on. Make sure you have called Window::init()");
-		::BeginDrawing();
+
+		::RL_BeginDrawing();
+
+		// ImGui_ImplOpenGL3_NewFrame();
+		// ImGui_ImplRaylib_NewFrame();
+
+		if (withImGui) {
+			glfwMakeContextCurrent(surgeGetGLFWwindow());
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+		}
+
 		return *this;
 	}
 
-	Window &Window::endDrawing() {
-		::EndDrawing();
+	Window &Window::endDrawing(bool withImGui) {
+		// Now handled in my fork of RayLib
+		// ImGui::Render();
+		// ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		::RL_EndDrawing(withImGui);
+
+		if (withImGui) { loadCachedImGuiFonts(); }
+
 		++detail::frameCount;
 		return *this;
 	}
 
 	Window &Window::drawFPS(const librapid::Vec2i &pos) {
-		::DrawFPS(pos.x(), pos.y());
+		::RL_DrawFPS(pos.x(), pos.y());
 		return *this;
 	}
 
 	Window &Window::drawFrameTime(const librapid::Vec2i &pos) {
 		static int64_t prevFrame = 0;
 		static float frameTime	 = 0.0f;
-		float newFrameTime		 = GetFrameTime();
+		float newFrameTime		 = ::RL_GetFrameTime();
 
 		if (this->frameCount() - prevFrame > 30 || newFrameTime > 0.05) {
 			prevFrame = this->frameCount();
@@ -213,22 +240,22 @@ namespace surge {
 		if (frameTime >= 16.666f) color = Color::yellow; // Average FPS
 		if (frameTime >= 33.333f) color = Color::orange; // Bad FPS
 		auto [r, g, b, a] = color.rgba();
-		::DrawText(librapid::formatTime<librapid::time::second>(frameTime).c_str(),
-				   pos.x(),
-				   pos.y(),
-				   20,
-				   {r, g, b, static_cast<uint8_t>(a * 255)});
+		::RL_DrawText(librapid::formatTime<librapid::time::second>(frameTime).c_str(),
+					  pos.x(),
+					  pos.y(),
+					  20,
+					  {r, g, b, static_cast<uint8_t>(a * 255)});
 
 		return *this;
 	}
 
 	Window &Window::drawTime(const librapid::Vec2i &pos) {
 		auto [r, g, b, a] = Color::magenta.rgba();
-		::DrawText(librapid::formatTime<librapid::time::second>(time()).c_str(),
-				   pos.x(),
-				   pos.y(),
-				   20,
-				   {r, g, b, static_cast<uint8_t>(a * 255)});
+		::RL_DrawText(librapid::formatTime<librapid::time::second>(time()).c_str(),
+					  pos.x(),
+					  pos.y(),
+					  20,
+					  {r, g, b, static_cast<uint8_t>(a * 255)});
 		return *this;
 	}
 

@@ -18,7 +18,7 @@ namespace surge {
 		bool initialized() const;
 		const std::string &fontName() const;
 		int64_t fontSize() const;
-		::Font font() const;
+		::RlFont font() const;
 
 		std::string &fontName();
 		int64_t &fontSize();
@@ -33,4 +33,7 @@ namespace surge {
 
 	Font operator|(const Font &lhs, Modifiers rhs);
 	Font operator|(Modifiers lhs, const Font &rhs);
+
+	void loadFontToImGui(const std::string &filePath);
+	void loadCachedImGuiFonts();
 } // namespace surge

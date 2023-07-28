@@ -52,19 +52,20 @@ namespace surge {
 		switch (m_numControls) {
 			case 0: {
 				if (m_thickness == 1.0f)
-					::DrawLine(static_cast<int>(m_start.x()),
-							   static_cast<int>(m_start.y()),
-							   static_cast<int>(m_end.x()),
-							   static_cast<int>(m_end.y()),
-							   {r, g, b, static_cast<uint8_t>(a * 255)});
+					::RL_DrawLine(static_cast<int>(m_start.x()),
+								  static_cast<int>(m_start.y()),
+								  static_cast<int>(m_end.x()),
+								  static_cast<int>(m_end.y()),
+								  {r, g, b, static_cast<uint8_t>(a * 255)});
 				else
-					::DrawLineEx({static_cast<float>(m_start.x()), static_cast<float>(m_start.y())},
-								 {static_cast<float>(m_end.x()), static_cast<float>(m_end.y())},
-								 m_thickness,
-								 {r, g, b, static_cast<uint8_t>(a * 255)});
+					::RL_DrawLineEx(
+					  {static_cast<float>(m_start.x()), static_cast<float>(m_start.y())},
+					  {static_cast<float>(m_end.x()), static_cast<float>(m_end.y())},
+					  m_thickness,
+					  {r, g, b, static_cast<uint8_t>(a * 255)});
 			} break;
 			case 1: {
-				::DrawLineBezierQuad(
+				::RL_DrawLineBezierQuad(
 				  {static_cast<float>(m_start.x()), static_cast<float>(m_start.y())},
 				  {static_cast<float>(m_end.x()), static_cast<float>(m_end.y())},
 				  {static_cast<float>(m_controls[0].x()), static_cast<float>(m_controls[0].y())},
@@ -72,7 +73,7 @@ namespace surge {
 				  {r, g, b, static_cast<uint8_t>(a * 255)});
 			} break;
 			case 2: {
-				::DrawLineBezierCubic(
+				::RL_DrawLineBezierCubic(
 				  {static_cast<float>(m_start.x()), static_cast<float>(m_start.y())},
 				  {static_cast<float>(m_end.x()), static_cast<float>(m_end.y())},
 				  {static_cast<float>(m_controls[0].x()), static_cast<float>(m_controls[0].y())},
