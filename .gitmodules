@@ -7,3 +7,6 @@
 [submodule "vendor/raylib"]
 	path = vendor/raylib
 	url = https://github.com/Pencilcaseman/raylib.git
+[submodule "vendor/implot"]
+	path = vendor/implot
+	url = https://github.com/epezent/implot.git

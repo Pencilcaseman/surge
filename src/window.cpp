@@ -41,10 +41,6 @@ namespace surge {
 
 	Window::~Window() {
 		close();
-		ImGui_ImplOpenGL3_Shutdown();
-		// ImGui_ImplRaylib_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
 	}
 
 	void Window::close() { ::RL_CloseWindow(); }

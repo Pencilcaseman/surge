@@ -53,5 +53,24 @@ target_include_directories(raylib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/raylib/src
 )
 
+set(IMPLOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor/implot)
+set(IMPLOT_SOURCES
+        ${IMPLOT_DIR}/implot.cpp
+        ${IMPLOT_DIR}/implot_items.cpp
+        ${IMPLOT_DIR}/implot_demo.cpp
+)
+add_library(implot STATIC ${IMPLOT_SOURCES})
+target_include_directories(implot PUBLIC
+        ${IMPLOT_DIR}
+        ${IMGUI_DIR}
+        ${IMGUI_DIR}/backends
+        ${GLFW_INCLUDE_DIRS}
+        ${CMAKE_CURRENT_SOURCE_DIR}/compat
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/raylib/src
+)
+
+target_compile_definitions(imgui PUBLIC "ImDrawIdx=unsigned int")
+target_compile_definitions(implot PUBLIC "ImDrawIdx=unsigned int")
+
 target_include_directories(${module_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(${module_name} PUBLIC librapid raylib imgui)
+target_link_libraries(${module_name} PUBLIC librapid raylib imgui implot)
