@@ -22,7 +22,8 @@ namespace surge {
 
 			// Add the standard extensions for font files to the font name, as well as
 			// alternate capitalizations
-			std::vector<std::string> possibleNames = {fontName + ".ttf",
+			std::vector<std::string> possibleNames = {fontName,
+													  fontName + ".ttf",
 													  fontName + ".ttc",
 													  fontName + ".otf",
 													  fontName + ".TTF",
@@ -35,6 +36,7 @@ namespace surge {
 			// List the standard directories where fonts are stored on Windows, macOS, and Linux
 			// plus a few extras
 			std::vector<std::string> directories = {
+			  "",
 			  ".",
 			  "..",
 			  "C:/Windows/Fonts",
