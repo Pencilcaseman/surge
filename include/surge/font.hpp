@@ -17,7 +17,7 @@ namespace surge {
 
 		LIBRAPID_NODISCARD bool initialized() const;
 		LIBRAPID_NODISCARD const std::string &fontName() const;
-		LIBRAPID_NODISCARD std::string &fontName();
+		LIBRAPID_NODISCARD std::string &name();
 		LIBRAPID_NODISCARD int64_t size() const;
 		LIBRAPID_NODISCARD int64_t &size();
 		LIBRAPID_NODISCARD ::RlFont rlFont() const;

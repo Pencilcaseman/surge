@@ -29,25 +29,29 @@ namespace surge {
 		inline static int roundedRectSegments = 0;
 	}
 
-	enum class WindowFlag {
-		vsync		= RL_FLAG_VSYNC_HINT,		  /// Enable V-Sync on GPU
-		fullscreen	= RL_FLAG_FULLSCREEN_MODE,	  /// Run program in fullscreen
-		resizable	= RL_FLAG_WINDOW_RESIZABLE,	  /// Allow resizable window
-		undecorated = RL_FLAG_WINDOW_UNDECORATED, /// Disable window decoration (frame and buttons)
-		hidden		= RL_FLAG_WINDOW_HIDDEN,	  /// Hide window
-		minimized	= RL_FLAG_WINDOW_MINIMIZED,	  /// Minimize window (iconify)
-		maximized	= RL_FLAG_WINDOW_MAXIMIZED,	  /// Maximize window (expanded to monitor)
-		unfocused	= RL_FLAG_WINDOW_UNFOCUSED,	  /// Window non focused
-		topmost		= RL_FLAG_WINDOW_TOPMOST,	  /// Window always on top
-		alwaysRun	= RL_FLAG_WINDOW_ALWAYS_RUN,  /// Allow windows running while minimized
-		transparent = RL_FLAG_WINDOW_TRANSPARENT, /// Allow transparent framebuffer
-		highDPI		= RL_FLAG_WINDOW_HIGHDPI,	  /// Support HighDPI
-		mousePassthrough =
-		  RL_FLAG_WINDOW_MOUSE_PASSTHROUGH,	 /// Support mouse passthrough, only
-											 /// supported when FLAG_WINDOW_UNDECORATED
-		msaa4x	   = RL_FLAG_MSAA_4X_HINT,	 /// Enable MSAA 4X
-		interlaced = RL_FLAG_INTERLACED_HINT /// Enable interlaced video format (for V3D)
+	enum class StateFlag {
+		fullscreen = RL_FLAG_FULLSCREEN_MODE,  // Set to run program in fullscreen
+		hidden	   = RL_FLAG_WINDOW_HIDDEN,	   // Set to hide window
+		minimized  = RL_FLAG_WINDOW_MINIMIZED, // Set to minimize window (iconify)
+		maximized  = RL_FLAG_WINDOW_MAXIMIZED, // Set to maximize window (expanded to monitor)
+		unfocused  = RL_FLAG_WINDOW_UNFOCUSED, // Set to window non-focused
+		topmost	   = RL_FLAG_WINDOW_TOPMOST,   // Set to window always on top
+		alwaysRun  = RL_FLAG_WINDOW_ALWAYS_RUN // Set to allow windows running while minimized
 	};
+
+	enum class ConfigFlag {
+		resizable = RL_FLAG_WINDOW_RESIZABLE, // Set to allow resizable window
+		undecorated =
+		  RL_FLAG_WINDOW_UNDECORATED, // Set to disable window decoration (frame and buttons)
+		transparent = RL_FLAG_WINDOW_TRANSPARENT, // Set to allow transparent window
+		highDPI		= RL_FLAG_WINDOW_HIGHDPI,	  // Set to support HighDPI
+		vsync		= RL_FLAG_VSYNC_HINT,		  // Set to use V-Sync
+		interlaced	= RL_FLAG_INTERLACED_HINT,	  // Set to use interlaced video format (for V3D)
+		msaa4x		= RL_FLAG_MSAA_4X_HINT		  // Set to use MSAA 4X
+	};
+
+	static std::initializer_list<ConfigFlag> defaultFlags = {
+	  ConfigFlag::msaa4x, ConfigFlag::vsync, ConfigFlag::interlaced};
 
 	enum class Key {
 		nullKey = RL_KEY_NULL, // Null key -- Used for when no key is pressed
@@ -231,5 +235,7 @@ namespace surge {
 #include "window.hpp"
 #include "line.hpp"
 #include "rectangle.hpp"
+#include "ellipse.hpp"
+#include "circle.hpp"
 #include "font.hpp"
 #include "text.hpp"

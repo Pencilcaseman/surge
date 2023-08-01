@@ -25,24 +25,28 @@ namespace surge {
 		Text()						= default;
 		Text(const Text &other)		= default;
 		Text(Text &&other) noexcept = default;
-		explicit Text(const std::string &text, const Font &font = Font(), double lineHeight = -1);
+		explicit Text(const librapid::Vec2d &pos, const std::string &text,
+					  const Font &font = Font(), double lineHeight = -1);
 
 		Text &operator=(const Text &other)	   = default;
 		Text &operator=(Text &&other) noexcept = default;
 		Text &operator=(const std::string &text);
 
+		const librapid::Vec2d &pos() const;
 		const std::string &text() const;
 		void setText(const std::string &text);
 
+		librapid::Vec2d &pos();
 		const Font &font() const;
 		void setFont(const Font &font);
 
 		librapid::Vec2d size() const;
 
-		void draw(const librapid::Vec2d &position, const Color &color = Color::white,
+		void draw(const Color &color  = Color::white,
 				  TextAlign alignment = TextAlign::TopLeft) const;
 
 	private:
+		librapid::Vec2d m_pos;
 		std::string m_text;
 		Font m_font;
 		double m_lineHeight;

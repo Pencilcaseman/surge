@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(surge)
 
+option(SURGE_BUILD_EXAMPLES "Build examples" ON)
+
 file(GLOB_RECURSE SURGE_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
@@ -74,3 +76,8 @@ target_compile_definitions(implot PUBLIC "ImDrawIdx=unsigned int")
 
 target_include_directories(${module_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${module_name} PUBLIC librapid raylib imgui implot)
+
+if (${SURGE_BUILD_EXAMPLES})
+    message(STATUS "[ SURGE ] Building Examples")
+    add_subdirectory(examples)
+endif ()

@@ -22,7 +22,8 @@ namespace surge {
 
 			// Add the standard extensions for font files to the font name, as well as
 			// alternate capitalizations
-			std::vector<std::string> possibleNames = {fontName + ".ttf",
+			std::vector<std::string> possibleNames = {fontName,
+													  fontName + ".ttf",
 													  fontName + ".ttc",
 													  fontName + ".otf",
 													  fontName + ".TTF",
@@ -35,6 +36,7 @@ namespace surge {
 			// List the standard directories where fonts are stored on Windows, macOS, and Linux
 			// plus a few extras
 			std::vector<std::string> directories = {
+			  "",
 			  ".",
 			  "..",
 			  "C:/Windows/Fonts",
@@ -218,7 +220,7 @@ namespace surge {
 	const std::string &Font::fontName() const { return m_fontName; }
 	int64_t Font::size() const { return m_fontSize; }
 
-	std::string &Font::fontName() { return m_fontName; }
+	std::string &Font::name() { return m_fontName; }
 	int64_t &Font::size() { return m_fontSize; }
 
 	::RlFont Font::rlFont() const {
@@ -233,8 +235,8 @@ namespace surge {
 
 	Font operator|(const Font &lhs, Modifiers rhs) {
 		Font result = lhs;
-		if (rhs == Modifiers::Bold) result.fontName() += "b";
-		if (rhs == Modifiers::Italic) result.fontName() += "i";
+		if (rhs == Modifiers::Bold) result.name() += "b";
+		if (rhs == Modifiers::Italic) result.name() += "i";
 		return result;
 	}
 

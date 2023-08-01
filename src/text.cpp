@@ -1,7 +1,9 @@
 #include <surge/surge.hpp>
 
 namespace surge {
-	Text::Text(const std::string &text, const Font &font, double lineHeight) :
+	Text::Text(const librapid::Vec2d &pos, const std::string &text, const Font &font,
+			   double lineHeight) :
+			m_pos(pos),
 			m_text(text), m_font(font), m_lineHeight(lineHeight) {
 		if (m_lineHeight < 0) {
 			auto [width, height] =
@@ -15,23 +17,24 @@ namespace surge {
 		return *this;
 	}
 
+	const librapid::Vec2d &Text::pos() const { return m_pos; }
 	const std::string &Text::text() const { return m_text; }
 	void Text::setText(const std::string &text) { m_text = text; }
 
+	librapid::Vec2d &Text::pos() { return m_pos; }
 	const Font &Text::font() const { return m_font; }
 	void Text::setFont(const Font &font) { m_font = font; }
 
 	librapid::Vec2d Text::size() const {
-		auto [width, height] = ::RL_MeasureTextEx(
-		  m_font.rlFont(), m_text.c_str(), static_cast<float>(m_font.size()), 0);
+		auto [width, height] =
+		  ::RL_MeasureTextEx(m_font.rlFont(), m_text.c_str(), static_cast<float>(m_font.size()), 0);
 
 		return {static_cast<double>(width), static_cast<double>(height)};
 	}
 
-	void Text::draw(const librapid::Vec2d &position, const Color &color,
-					TextAlign alignment) const {
+	void Text::draw(const Color &color, TextAlign alignment) const {
 		auto [r, g, b, a]		= color.rgba();
-		librapid::Vec2d drawPos = position;
+		librapid::Vec2d drawPos = m_pos;
 		int horizontalAlignment = static_cast<int>(alignment) & 0b0011;
 		int verticalAlignment	= static_cast<int>(alignment) & 0b1100;
 
