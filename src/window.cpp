@@ -19,13 +19,20 @@ namespace surge {
 		// window = *this;
 	}
 
-	Window::Window(const librapid::Vec2i &size, const std::string &title) :
-			m_initialSize(size), m_initialTitle(title) {
+	Window::Window(const librapid::Vec2i &size, const std::string &title,
+				   const std::initializer_list<ConfigFlag> &flags) :
+			m_initialSize(size),
+			m_initialTitle(title) {
 		detail::windowsCreated++;
 		LIBRAPID_ASSERT(detail::windowsCreated == 1,
 						"Only one window can be created at a time!\nIf you are trying to get/set a "
 						"property of the window, use the surge::window variable.");
 
+		for (const auto &flag : flags) {
+			RL_SetConfigFlags(static_cast<uint32_t>(flag));
+		}
+
+		init();
 		window = *this;
 	}
 
@@ -55,10 +62,11 @@ namespace surge {
 	}
 
 	Window &Window::setFlag(WindowFlag flag, bool state) {
-		if (state)
+		if (state) {
 			::RL_SetWindowState(static_cast<unsigned int>(flag));
-		else
+		} else {
 			::RL_ClearWindowState(static_cast<unsigned int>(flag));
+		}
 		return *this;
 	}
 

@@ -30,7 +30,6 @@ namespace surge {
 	}
 
 	enum class WindowFlag {
-		vsync		= RL_FLAG_VSYNC_HINT,		  /// Enable V-Sync on GPU
 		fullscreen	= RL_FLAG_FULLSCREEN_MODE,	  /// Run program in fullscreen
 		resizable	= RL_FLAG_WINDOW_RESIZABLE,	  /// Allow resizable window
 		undecorated = RL_FLAG_WINDOW_UNDECORATED, /// Disable window decoration (frame and buttons)
@@ -43,10 +42,15 @@ namespace surge {
 		transparent = RL_FLAG_WINDOW_TRANSPARENT, /// Allow transparent framebuffer
 		highDPI		= RL_FLAG_WINDOW_HIGHDPI,	  /// Support HighDPI
 		mousePassthrough =
-		  RL_FLAG_WINDOW_MOUSE_PASSTHROUGH,	 /// Support mouse passthrough, only
-											 /// supported when FLAG_WINDOW_UNDECORATED
+		  RL_FLAG_WINDOW_MOUSE_PASSTHROUGH, /// Support mouse passthrough, only
+											/// supported when FLAG_WINDOW_UNDECORATED
+	};
+
+	enum class ConfigFlag {
+		vsync	   = RL_FLAG_VSYNC_HINT,	 /// Enable V-Sync on GPU
 		msaa4x	   = RL_FLAG_MSAA_4X_HINT,	 /// Enable MSAA 4X
 		interlaced = RL_FLAG_INTERLACED_HINT /// Enable interlaced video format (for V3D)
+
 	};
 
 	enum class Key {

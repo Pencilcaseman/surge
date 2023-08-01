@@ -11,9 +11,8 @@ namespace surge {
 		///
 		/// \param size The size of the window (librapid::Vec2i)
 		/// \param title The title of the window (std::string)
-		explicit Window(const librapid::Vec2i &size, const std::string &title = "RayLib");
-
-		Window &init();
+		explicit Window(const librapid::Vec2i &size, const std::string &title = "RayLib",
+						const std::initializer_list<ConfigFlag> &flags = {});
 
 		~Window();
 
@@ -233,6 +232,10 @@ namespace surge {
 
 		// LIBRAPID_NODISCARD Keyboard &keyboard();
 		// LIBRAPID_NODISCARD const Keyboard &keyboard() const;
+
+	protected:
+		Window &init();
+
 	private:
 		librapid::Vec2i m_initialSize;
 		std::string m_initialTitle;
@@ -241,4 +244,7 @@ namespace surge {
 
 	// Singleton instance of the window
 	extern Window window;
+
+	static std::initializer_list<ConfigFlag> defaultFlags = {
+	  ConfigFlag::msaa4x, ConfigFlag::vsync, ConfigFlag::interlaced};
 } // namespace surge
