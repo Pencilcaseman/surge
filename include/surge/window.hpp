@@ -12,7 +12,7 @@ namespace surge {
 		/// \param size The size of the window (librapid::Vec2i)
 		/// \param title The title of the window (std::string)
 		explicit Window(const librapid::Vec2i &size, const std::string &title = "RayLib",
-						const std::initializer_list<ConfigFlag> &flags = {});
+						const std::initializer_list<ConfigFlag> &flags = defaultFlags);
 
 		~Window();
 
@@ -48,15 +48,15 @@ namespace surge {
 		LIBRAPID_NODISCARD bool isResized() const;
 
 		/// \brief Check if the window is in a specific state
-		/// \param flag The state to check for (uint64_t)
+		/// \param flag The state to check for
 		/// \return True if the window is in the specified state, false otherwise
-		LIBRAPID_NODISCARD bool isState(uint64_t flag) const;
+		LIBRAPID_NODISCARD bool isState(StateFlag flag) const;
 
 		/// \brief Set a flag for the window to a specific state
 		/// Set a flag for the window
-		/// \param flag The flag to set (uint64_t)
+		/// \param flag The flag to set
 		/// \return A reference to the window
-		Window &setFlag(WindowFlag flag, bool state = true);
+		Window &setFlag(StateFlag flag, bool state = true);
 
 		/// \brief Clear the window with a specified color
 		/// \param color The color to clear the window with (surge::Color)
@@ -244,7 +244,4 @@ namespace surge {
 
 	// Singleton instance of the window
 	extern Window window;
-
-	static std::initializer_list<ConfigFlag> defaultFlags = {
-	  ConfigFlag::msaa4x, ConfigFlag::vsync, ConfigFlag::interlaced};
 } // namespace surge

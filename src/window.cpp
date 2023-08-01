@@ -57,11 +57,12 @@ namespace surge {
 	bool Window::isMaximized() const { return ::RL_IsWindowMaximized(); }
 	bool Window::isFocused() const { return ::RL_IsWindowFocused(); }
 	bool Window::isResized() const { return ::RL_IsWindowResized(); }
-	bool Window::isState(uint64_t flag) const {
+
+	bool Window::isState(StateFlag flag) const {
 		return ::RL_IsWindowState(static_cast<unsigned int>(flag));
 	}
 
-	Window &Window::setFlag(WindowFlag flag, bool state) {
+	Window &Window::setFlag(StateFlag flag, bool state) {
 		if (state) {
 			::RL_SetWindowState(static_cast<unsigned int>(flag));
 		} else {

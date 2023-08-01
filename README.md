@@ -1,11 +1,11 @@
 # Surge
 
-![Minimal Demo Program](https://raw.githubusercontent.com/Pencilcaseman/Surge/master/images/minimalDemoProgram.png)
-![Minimal Demo Program](https://raw.githubusercontent.com/Pencilcaseman/Surge/master/images/minimalDemoProgramOutput.png)
-
 Surge is a powerful graphics engine for creative coding, focusing on simplicity and ease of use for C++ developers. With
 simple OpenGL drawing, ImGui integration for interfaces and LibRapid for mathematics and calculations, Surge is a
 powerful, simple and effective tool for all.
+
+![Minimal Demo Program](https://raw.githubusercontent.com/Pencilcaseman/Surge/develop/images/minimalDemoProgram.png)
+![Minimal Demo Program](https://raw.githubusercontent.com/Pencilcaseman/Surge/develop/images/minimalDemoProgramOutput.png)
 
 #### When to use Surge
 
@@ -24,14 +24,17 @@ powerful, simple and effective tool for all.
 - You need uncommon features which are not present in Surge
 - You need a professional-looking UI for your application
 
+## Examples
+
+There are a range of example programs available in
+the [examples](https://github.com/Pencilcaseman/surge/tree/master/examples) directory. These show off some of the basic
+features of the library and are designed to give you an idea of how to use Surge in your own projects.
+
+![Four Demo Programs](https://raw.githubusercontent.com/Pencilcaseman/Surge/develop/images/fourDemosImage.png)
+
 ---
 
-Surge is a powerful graphics engine designed for creative coding in C++. Surge provides convenient and intuitive
-wrappers around [RayLib](https://www.raylib.com/cheatsheet/cheatsheet.html) to 
-
 ## To Do:
-
-
 
 - [ ] [RayLib](https://www.raylib.com/cheatsheet/cheatsheet.html)
 - [ ] [RayMath](https://www.raylib.com/cheatsheet/raymath_cheatsheet.html)
