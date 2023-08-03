@@ -239,3 +239,4 @@ namespace surge {
 #include "circle.hpp"
 #include "font.hpp"
 #include "text.hpp"
+#include "qol.hpp"

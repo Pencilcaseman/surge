@@ -263,7 +263,6 @@ namespace ImGui {
 			surge::detail::shouldSetImGuiFont = true;
 			surge::detail::imGuiFontToSet	  = font;
 		}
-		// ImGui::SetCurrentFont(font.imFont());
 		ImGui::GetIO().FontDefault = font.imFont();
 	}
 } // namespace ImGui
