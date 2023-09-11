@@ -2,7 +2,7 @@
 
 namespace surge {
 	namespace detail {
-		static RGB hsvToRgb(float h, float s, float v) {
+		RGB hsvToRgb(float h, float s, float v) {
 			h = librapid::clamp(h, 0.0f, 1.0f);
 			s = librapid::clamp(s, 0.0f, 1.0f);
 			v = librapid::clamp(v, 0.0f, 1.0f);
