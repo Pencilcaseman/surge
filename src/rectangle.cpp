@@ -47,7 +47,9 @@ namespace surge {
 	void Rectangle::drawLines(const Color &color) const {
 		auto [r, g, b, a] = color.rgba();
 
-		SURGE_WARN_ONCE(m_rotation == 0.0f, "Rotated rectangles cannot be drawn with lines.");
+		if (m_rotation != 0.0f) {
+			SURGE_WARN_ONCE("Rotated rectangles cannot be drawn with lines.");
+		}
 
 		if (m_roundness == 0) {
 			::RL_DrawRectangleLinesEx(
@@ -78,8 +80,9 @@ namespace surge {
 		auto [r, g, b, a] = color.rgba();
 
 		if (m_rotation != 0) {
-			SURGE_WARN_ONCE(m_roundness == 0.0f,
-							"Rounded rectangles cannot be drawn with a rotation.");
+			if (m_rotation != 0.0f) {
+				SURGE_WARN_ONCE("Rotated rectangles cannot be drawn with a rotation.");
+			}
 
 			auto halfSize = m_size * 0.5f;
 			auto drawPos  = m_pos + halfSize;
@@ -118,8 +121,13 @@ namespace surge {
 		auto [r2, g2, b2, a2] = v2.rgba();
 		auto [r3, g3, b3, a3] = v3.rgba();
 
-		SURGE_WARN_ONCE(m_roundness == 0.0f, "Rounded rectangles cannot be drawn with a gradient.");
-		SURGE_WARN_ONCE(m_rotation == 0.0f, "Rotated rectangles cannot be drawn with a gradient.");
+		if (m_rotation != 0.0f) {
+			SURGE_WARN_ONCE("Rotated rectangles cannot be drawn with a gradient.");
+		}
+
+		if (m_roundness != 0.0f) {
+			SURGE_WARN_ONCE("Rounded rectangles cannot be drawn with a gradient.");
+		}
 
 		::RL_DrawRectangleGradientEx(
 		  {

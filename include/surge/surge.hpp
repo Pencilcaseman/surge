@@ -15,11 +15,11 @@
 #	error "raylib-cpp requires at least raylib 4.5.0"
 #endif
 
-#define SURGE_WARN_ONCE(condition, message)                                                        \
+#define SURGE_WARN_ONCE(message, ...)                                                        \
 	do {                                                                                           \
 		static bool warned = false;                                                                \
-		if (!(condition) && !warned) {                                                             \
-			LIBRAPID_WARN(message);                                                                \
+		if (!warned) {                                                             \
+			LIBRAPID_WARN(message, __VA_ARGS__);                                                                \
 			warned = true;                                                                         \
 		}                                                                                          \
 	} while (0)

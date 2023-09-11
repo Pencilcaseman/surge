@@ -1,5 +1,10 @@
 #include <surge/surge.hpp>
 
+#ifdef LIBRAPID_APPLE
+	#include <OpenGL/gl.h>
+	#include <OpenGL/glu.h>
+#endif
+
 namespace surge {
 	namespace detail {
 		struct FontPair {
@@ -18,7 +23,7 @@ namespace surge {
 		}
 
 		std::string findFontFile(const std::string &fontName, bool &found, bool retry) {
-			LIBRAPID_STATUS("Searching for font file: " + fontName);
+			LIBRAPID_STATUS("Searching for font file: {}", fontName);
 
 			// Add the standard extensions for font files to the font name, as well as
 			// alternate capitalizations
@@ -65,7 +70,7 @@ namespace surge {
 						// If the file exists and is a regular file, return its path
 						if (std::filesystem::exists(filePath) &&
 							std::filesystem::is_regular_file(filePath)) {
-							LIBRAPID_STATUS("Found font file: " + filePath.string());
+							LIBRAPID_STATUS("Found font file: {}", filePath.string());
 							found = true;
 							return filePath.string();
 						}
@@ -131,7 +136,7 @@ namespace surge {
 			bool found;
 			std::string filePath = findFontFile(fontName, found);
 			if (!found) {
-				LIBRAPID_WARN("Could not find font file: " + fontName);
+				LIBRAPID_WARN("Could not find font file: {}", fontName);
 				return nullptr;
 			}
 
