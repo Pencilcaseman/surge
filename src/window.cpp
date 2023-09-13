@@ -44,8 +44,6 @@ namespace surge {
 		return *this;
 	}
 
-	Window::~Window() { close(); }
-
 	void Window::close() { ::RL_CloseWindow(); }
 
 	bool Window::isCursorOnScreen() const { return ::RL_IsCursorOnScreen(); }
