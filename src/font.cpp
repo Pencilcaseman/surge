@@ -1,8 +1,8 @@
 #include <surge/surge.hpp>
 
 #ifdef LIBRAPID_APPLE
-	#include <OpenGL/gl.h>
-	#include <OpenGL/glu.h>
+#	include <OpenGL/gl.h>
+#	include <OpenGL/glu.h>
 #endif
 
 namespace surge {
@@ -23,8 +23,6 @@ namespace surge {
 		}
 
 		std::string findFontFile(const std::string &fontName, bool &found, bool retry) {
-			LIBRAPID_STATUS("Searching for font file: {}", fontName);
-
 			// Add the standard extensions for font files to the font name, as well as
 			// alternate capitalizations
 			std::vector<std::string> possibleNames = {fontName,
@@ -38,6 +36,8 @@ namespace surge {
 													  fontName + ".Ttc",
 													  fontName + ".Otf"};
 
+			static std::string unixHome = std::getenv("HOME");
+
 			// List the standard directories where fonts are stored on Windows, macOS, and Linux
 			// plus a few extras
 			std::vector<std::string> directories = {
@@ -47,15 +47,16 @@ namespace surge {
 			  "C:/Windows/Fonts",
 			  "/Library/Fonts",
 			  "/System/Library/Fonts",
-			  "~/Library/Fonts",
+			  "/System/Library/Fonts/Supplemental",
+			  fmt::format("{}/Library/Fonts", unixHome),
 			  "/usr/share/fonts",
 			  "/usr/local/share/fonts",
-			  "~/.fonts",
-			  "~/.local/share/fonts",
-			  "~/.local/fonts",
-			  "~/.local/lib/fonts",
-			  "~/.local/lib/share/fonts",
-			  "~/.local/lib/x86_64-linux-gnu/fonts",
+			  fmt::format("{}/.fonts", unixHome),
+			  fmt::format("{}/.local/share/fonts", unixHome),
+			  fmt::format("{}/.local/fonts", unixHome),
+			  fmt::format("{}/.local/lib/fonts", unixHome),
+			  fmt::format("{}/.local/lib/share/fonts", unixHome),
+			  fmt::format("{}/.local/lib/x86_64-linux-gnu/fonts", unixHome),
 			};
 
 			// Try each directory
@@ -65,7 +66,8 @@ namespace surge {
 					std::filesystem::is_directory(directory)) {
 					// Try each possible file name
 					for (const auto &name : possibleNames) {
-						std::filesystem::path filePath = directory + "/" + name;
+						std::filesystem::path filePath = fmt::format("{}/{}", directory, name);
+						LIBRAPID_STATUS("Searching for font file: {}", filePath.string());
 
 						// If the file exists and is a regular file, return its path
 						if (std::filesystem::exists(filePath) &&
@@ -87,6 +89,14 @@ namespace surge {
 				if (foundRegular) {
 					found = true;
 					return regular;
+				}
+
+				// Try appending " Unicode" to the font name
+				bool foundUnicode = false;
+				auto unicode	  = findFontFile(fontName + " Unicode", foundUnicode, false);
+				if (foundUnicode) {
+					found = true;
+					return unicode;
 				}
 
 				// Try appending " Nerd Font Complete Windows Compatible" to the font name
