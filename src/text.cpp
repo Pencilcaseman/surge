@@ -42,7 +42,7 @@ namespace surge {
 			case 0: // Left
 				break;
 			case 1: // Center
-				drawPos.x() = drawPos.x() - size().x() / 2;
+				drawPos.x() = float(drawPos.x() - size().x()) / 2;
 				break;
 			case 2: // Right
 				drawPos.x() = drawPos.x() - size().x();
@@ -54,7 +54,7 @@ namespace surge {
 			case 0: // Top
 				break;
 			case 4: // Middle
-				drawPos.y() = drawPos.y() - size().y() / 2;
+				drawPos.y() = float(drawPos.y() - size().y()) / 2;
 				break;
 			case 8: // Bottom
 				drawPos.y() = drawPos.y() - size().y();

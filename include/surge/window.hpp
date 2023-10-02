@@ -14,8 +14,6 @@ namespace surge {
 		explicit Window(const librapid::Vec2i &size, const std::string &title = "RayLib",
 						const std::initializer_list<ConfigFlag> &flags = defaultFlags);
 
-		~Window();
-
 		/// \brief Close the window
 		void close();
 

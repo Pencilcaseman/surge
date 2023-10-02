@@ -28,9 +28,7 @@ namespace surge {
 						"Only one window can be created at a time!\nIf you are trying to get/set a "
 						"property of the window, use the surge::window variable.");
 
-		for (const auto &flag : flags) {
-			RL_SetConfigFlags(static_cast<uint32_t>(flag));
-		}
+		for (const auto &flag : flags) { RL_SetConfigFlags(static_cast<uint32_t>(flag)); }
 
 		init();
 		window = *this;
@@ -45,8 +43,6 @@ namespace surge {
 
 		return *this;
 	}
-
-	Window::~Window() { close(); }
 
 	void Window::close() { ::RL_CloseWindow(); }
 
@@ -246,22 +242,24 @@ namespace surge {
 		if (frameTime >= 16.666f) color = Color::yellow; // Average FPS
 		if (frameTime >= 33.333f) color = Color::orange; // Bad FPS
 		auto [r, g, b, a] = color.rgba();
-		::RL_DrawText(librapid::formatTime<librapid::time::second>(frameTime).c_str(),
-					  pos.x(),
-					  pos.y(),
-					  20,
-					  {r, g, b, static_cast<uint8_t>(a * 255)});
+		::RL_DrawText(
+		  fmt::format("{}", librapid::formatTime<librapid::time::second>(frameTime)).c_str(),
+		  pos.x(),
+		  pos.y(),
+		  20,
+		  {r, g, b, static_cast<uint8_t>(a * 255)});
 
 		return *this;
 	}
 
 	Window &Window::drawTime(const librapid::Vec2i &pos) {
 		auto [r, g, b, a] = Color::magenta.rgba();
-		::RL_DrawText(librapid::formatTime<librapid::time::second>(time()).c_str(),
-					  pos.x(),
-					  pos.y(),
-					  20,
-					  {r, g, b, static_cast<uint8_t>(a * 255)});
+		::RL_DrawText(
+		  fmt::format("{}", librapid::formatTime<librapid::time::second>(time())).c_str(),
+		  pos.x(),
+		  pos.y(),
+		  20,
+		  {r, g, b, static_cast<uint8_t>(a * 255)});
 		return *this;
 	}
 

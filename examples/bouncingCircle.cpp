@@ -25,14 +25,14 @@ int main() {
 		position += velocity * window.frameTime();
 
 		// Bounce off the walls
-		if (position.x() < size || position.x() > window.size().x() - size) {
+		if (position.x() < size || position.x() > float(window.size().x()) - size) {
 			velocity.x() *= -friction;
-			position.x() = librapid::clamp(position.x(), size, window.size().x() - size);
+			position.x() = librapid::clamp(position.x(), size, float(window.size().x()) - size);
 		}
 
-		if (position.y() < size || position.y() > window.size().y() - size) {
+		if (position.y() < size || position.y() > float(window.size().y()) - size) {
 			velocity.y() *= -friction;
-			position.y() = librapid::clamp(position.y(), size, window.size().y() - size);
+			position.y() = librapid::clamp(position.y(), size, float(window.size().y()) - size);
 		}
 
 		surge::Circle(position, size).draw(surge::Color::purple);
