@@ -74,6 +74,8 @@ namespace surge {
 		LIBRAPID_NODISCARD HSL hsl() const;
 		LIBRAPID_NODISCARD HSLA hsla() const;
 
+		LIBRAPID_NODISCARD ::RlColor rlColor() const;
+
 		const static Color empty;
 		const static Color gray;
 		const static Color darkGray;

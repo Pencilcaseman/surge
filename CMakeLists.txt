@@ -12,7 +12,8 @@ list(APPEND SURGE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/compat/imguiCompat.cpp")
 list(APPEND SURGE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/compat/raylibCoreData.c")
 
 set(module_name "surge")
-add_library(${module_name} STATIC ${SURGE_SOURCES})
+add_library(${module_name} STATIC ${SURGE_SOURCES}
+        src/image.cpp)
 
 # RayLib should use static libraries
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
@@ -76,6 +77,26 @@ target_compile_definitions(implot PUBLIC "ImDrawIdx=unsigned int")
 
 target_include_directories(${module_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${module_name} PUBLIC librapid raylib imgui implot)
+
+target_compile_definitions(
+        raylib PUBLIC
+        SUPPORT_MODULE_RTEXTURES
+        SUPPORT_FILEFORMAT_BMP
+        SUPPORT_FILEFORMAT_PNG
+        SUPPORT_FILEFORMAT_TGA
+        SUPPORT_FILEFORMAT_JPG
+        SUPPORT_FILEFORMAT_GIF
+        SUPPORT_FILEFORMAT_QOI
+        SUPPORT_FILEFORMAT_PSD
+        SUPPORT_FILEFORMAT_HDR
+        SUPPORT_FILEFORMAT_PIC
+        SUPPORT_FILEFORMAT_PNM
+        SUPPORT_FILEFORMAT_DDS
+        SUPPORT_FILEFORMAT_PKM
+        SUPPORT_FILEFORMAT_KTX
+        SUPPORT_FILEFORMAT_PVR
+        SUPPORT_FILEFORMAT_ASTC
+)
 
 if (${SURGE_BUILD_EXAMPLES})
     message(STATUS "[ SURGE ] Building Examples")

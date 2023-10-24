@@ -15,11 +15,11 @@
 #	error "raylib-cpp requires at least raylib 4.5.0"
 #endif
 
-#define SURGE_WARN_ONCE(message, ...)                                                        \
+#define SURGE_WARN_ONCE(message, ...)                                                              \
 	do {                                                                                           \
 		static bool warned = false;                                                                \
-		if (!warned) {                                                             \
-			LIBRAPID_WARN(message, __VA_ARGS__);                                                                \
+		if (!warned) {                                                                             \
+			LIBRAPID_WARN(message, __VA_ARGS__);                                                   \
 			warned = true;                                                                         \
 		}                                                                                          \
 	} while (0)
@@ -239,4 +239,5 @@ namespace surge {
 #include "circle.hpp"
 #include "font.hpp"
 #include "text.hpp"
+#include "image.hpp"
 #include "qol.hpp"

@@ -141,4 +141,13 @@ namespace surge {
 		  {r2, g2, b2, static_cast<uint8_t>(a2 * 255)},
 		  {r1, g1, b1, static_cast<uint8_t>(a1 * 255)});
 	}
+
+	RlRectangle Rectangle::rlRectangle() const {
+		return {
+			static_cast<float>(m_pos.x()),
+			static_cast<float>(m_pos.y()),
+			static_cast<float>(m_size.x()),
+			static_cast<float>(m_size.y()),
+		};
+	}
 } // namespace surge

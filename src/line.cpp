@@ -47,8 +47,6 @@ namespace surge {
 	}
 
 	void Line::draw(const Color &color) const {
-		auto [r, g, b, a] = color.rgba();
-
 		switch (m_numControls) {
 			case 0: {
 				if (m_thickness == 1.0f)
@@ -56,13 +54,13 @@ namespace surge {
 								  static_cast<int>(m_start.y()),
 								  static_cast<int>(m_end.x()),
 								  static_cast<int>(m_end.y()),
-								  {r, g, b, static_cast<uint8_t>(a * 255)});
+								  color.rlColor());
 				else
 					::RL_DrawLineEx(
 					  {static_cast<float>(m_start.x()), static_cast<float>(m_start.y())},
 					  {static_cast<float>(m_end.x()), static_cast<float>(m_end.y())},
 					  m_thickness,
-					  {r, g, b, static_cast<uint8_t>(a * 255)});
+					  color.rlColor());
 			} break;
 			case 1: {
 				::RL_DrawLineBezierQuad(
@@ -70,7 +68,7 @@ namespace surge {
 				  {static_cast<float>(m_end.x()), static_cast<float>(m_end.y())},
 				  {static_cast<float>(m_controls[0].x()), static_cast<float>(m_controls[0].y())},
 				  m_thickness,
-				  {r, g, b, static_cast<uint8_t>(a * 255)});
+				  color.rlColor());
 			} break;
 			case 2: {
 				::RL_DrawLineBezierCubic(
@@ -79,7 +77,7 @@ namespace surge {
 				  {static_cast<float>(m_controls[0].x()), static_cast<float>(m_controls[0].y())},
 				  {static_cast<float>(m_controls[1].x()), static_cast<float>(m_controls[1].y())},
 				  m_thickness,
-				  {r, g, b, static_cast<uint8_t>(a * 255)});
+				  color.rlColor());
 			} break;
 		}
 	}

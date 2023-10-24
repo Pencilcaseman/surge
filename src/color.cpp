@@ -120,6 +120,11 @@ namespace surge {
 	HSL Color::hsl() const { LIBRAPID_NOT_IMPLEMENTED; }
 	HSLA Color::hsla() const { LIBRAPID_NOT_IMPLEMENTED; }
 
+	RlColor Color::rlColor() const {
+		auto [r, g, b, a] = rgba();
+		return {r, g, b, static_cast<uint8_t>(a * 255)};
+	}
+
 	const Color Color::empty		 = Color::fromRGBA({0, 0, 0, 0});
 	const Color Color::veryDarkGray	 = Color::fromRGBA({15, 15, 15, 1});
 	const Color Color::veryLightGray = Color::fromRGBA({240, 240, 240, 1});

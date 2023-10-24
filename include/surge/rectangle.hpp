@@ -36,6 +36,8 @@ namespace surge {
 		void draw(const Color &v0, const Color &v1, const Color &v2, const Color &v3) const;
 		void draw(const Color &first, const Color &second, GradientDirection direction) const;
 
+		RlRectangle rlRectangle() const;
+
 	private:
 		librapid::Vec2d m_pos;
 		librapid::Vec2d m_size;
