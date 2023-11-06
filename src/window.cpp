@@ -243,7 +243,7 @@ namespace surge {
 		if (frameTime >= 33.333f) color = Color::orange; // Bad FPS
 		auto [r, g, b, a] = color.rgba();
 		::RL_DrawText(
-		  fmt::format("{}", librapid::formatTime<librapid::time::second>(frameTime)).c_str(),
+		  fmt::format("{:.3f}", librapid::formatTime<librapid::time::second>(frameTime)).c_str(),
 		  pos.x(),
 		  pos.y(),
 		  20,
