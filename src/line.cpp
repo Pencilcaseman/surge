@@ -49,18 +49,11 @@ namespace surge {
 	void Line::draw(const Color &color) const {
 		switch (m_numControls) {
 			case 0: {
-				if (m_thickness == 1.0f)
-					::RL_DrawLine(static_cast<int>(m_start.x()),
-								  static_cast<int>(m_start.y()),
-								  static_cast<int>(m_end.x()),
-								  static_cast<int>(m_end.y()),
-								  color.rlColor());
-				else
-					::RL_DrawLineEx(
-					  {static_cast<float>(m_start.x()), static_cast<float>(m_start.y())},
-					  {static_cast<float>(m_end.x()), static_cast<float>(m_end.y())},
-					  m_thickness,
-					  color.rlColor());
+				::RL_DrawLineEx(
+				  {static_cast<float>(m_start.x()), static_cast<float>(m_start.y())},
+				  {static_cast<float>(m_end.x()), static_cast<float>(m_end.y())},
+				  m_thickness,
+				  color.rlColor());
 			} break;
 			case 1: {
 				::RL_DrawLineBezierQuad(
