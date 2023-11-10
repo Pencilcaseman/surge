@@ -16,7 +16,7 @@ namespace surge {
 
 	void rotate(double angle, double x, double y, double z) {
 		// Convert radians to degrees
-		::rlRotatef(static_cast<float>(angle * librapid::RADTODEG),
+		::rlRotatef(static_cast<float>(angle * librapid::constants::radToDeg),
 					static_cast<float>(x),
 					static_cast<float>(y),
 					static_cast<float>(z));

@@ -28,8 +28,11 @@ namespace surge {
 
 	Image Image::linearGradient(const Color &first, const Color &second,
 								const librapid::Vec2i &size, float theta) {
-		return {::RL_GenImageGradientLinear(
-		  size.x(), size.y(), int(theta * librapid::RADTODEG), first.rlColor(), second.rlColor())};
+		return {::RL_GenImageGradientLinear(size.x(),
+											size.y(),
+											int(theta * librapid::constants::radToDeg),
+											first.rlColor(),
+											second.rlColor())};
 	}
 
 	Image Image::radialGradient(const Color &inner, const Color &outer, const librapid::Vec2i &size,
@@ -197,15 +200,15 @@ namespace surge {
 		return *this;
 	}
 
-//	Image &Image::draw(const Rectangle &rec) {
-//		// To do: Remove this function
-//		::RlTexture2D texture = ::RL_LoadTextureFromImage(m_image);
-//		// Wait for the texture to load
-//		// while (!::RL_IsTextureReady(texture)) {}
-//		::RL_DrawTexture(texture, rec.pos().x(), rec.pos().y(), Color::white.rlColor());
-//		// ::RL_UnloadTexture(texture);
-//		return *this;
-//	}
+	Image &Image::draw(const Rectangle &rec) {
+		// To do: Remove this function
+		::RlTexture2D texture = ::RL_LoadTextureFromImage(m_image);
+		// Wait for the texture to load
+		// while (!::RL_IsTextureReady(texture)) {}
+		::RL_DrawTexture(texture, rec.pos().x(), rec.pos().y(), Color::white.rlColor());
+		// ::RL_UnloadTexture(texture);
+		return *this;
+	}
 
 	bool Image::isReady() const { return ::RL_IsImageReady(m_image); }
 } // namespace surge

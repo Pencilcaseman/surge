@@ -93,7 +93,7 @@ namespace surge {
 			   static_cast<float>(m_size.x()),
 			   static_cast<float>(m_size.y())},
 			  {static_cast<float>(halfSize.x()), static_cast<float>(halfSize.y())},
-			  m_rotation * static_cast<float>(librapid::RADTODEG),
+			  m_rotation * static_cast<float>(librapid::constants::radToDeg),
 			  {r, g, b, static_cast<uint8_t>(a * 255)});
 		} else if (m_roundness == 0) {
 			::RL_DrawRectangle(static_cast<int>(m_pos.x()),
