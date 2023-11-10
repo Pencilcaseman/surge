@@ -66,7 +66,7 @@ namespace surge {
 
 	bool Color::operator!=(const Color &other) const { return !(*this == other); }
 
-	Color::Color(uint8_t g) : m_color(g, g, g, 255) {}
+	Color::Color(uint8_t g) : m_color(librapid::Vec4d(g, g, g, 255.0f) / 255.0f) {}
 	Color::Color(uint8_t r, uint8_t g, uint8_t b, float a) :
 			m_color(librapid::Vec4d(r, g, b, a) / 255.0f) {}
 
