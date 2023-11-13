@@ -91,6 +91,14 @@ namespace surge {
 					return regular;
 				}
 
+				// Try appending "-Regular" to the font name
+				bool foundDashRegular = false;
+				auto dashRegular	  = findFontFile(fontName + "-Regular", foundDashRegular, false);
+				if (foundDashRegular) {
+					found = true;
+					return dashRegular;
+				}
+
 				// Try appending " Unicode" to the font name
 				bool foundUnicode = false;
 				auto unicode	  = findFontFile(fontName + " Unicode", foundUnicode, false);
